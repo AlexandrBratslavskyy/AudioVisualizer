@@ -42,6 +42,19 @@ namespace AudioVisualizer
         {
             return data.Count;
         }
+        public void Cut(int start, int end)
+        {
+            data.RemoveRange(start, end - start);
+        }
+        public void Copy(int start, int end)
+        {
+            data.GetRange(start, end - start);
+        }
+        public void Paste(int paste, S s)
+        {
+            for(int i = 0; i < s.Size(); i++)
+                data.Insert(paste + i, s.Get(i));
+        }
         private List<int> data = new List<int>();
         private long max = 0;
     }

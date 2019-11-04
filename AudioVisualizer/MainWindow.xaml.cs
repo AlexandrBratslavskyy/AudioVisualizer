@@ -27,9 +27,9 @@ namespace AudioVisualizer
         }
 
         S s;
-        void DisplayOnCanvas()
+        void DisplayTimeDomain()
         {
-            canvas.Width = Display.DrawChart(canvas, s);
+            TimeDomain.Width = Display.DrawTimeDomain(TimeDomain, s);
         }
         //display wave
         void record(object sender, RoutedEventArgs e)
@@ -50,11 +50,11 @@ namespace AudioVisualizer
             {
                 case MessageBoxResult.Yes:
                     s = Tests.SimpleCosineWave();
-                    DisplayOnCanvas();
+                    DisplayTimeDomain();
                     break;
                 case MessageBoxResult.No:
                     s = Tests.ComplexCosineWave();
-                    DisplayOnCanvas();
+                    DisplayTimeDomain();
                     break;
                 case MessageBoxResult.Cancel:
                     break;
@@ -86,7 +86,7 @@ namespace AudioVisualizer
                 return;
             }
             Display.ZoomOut();
-            DisplayOnCanvas();
+            DisplayTimeDomain();
         }
         void zoomin(object sender, RoutedEventArgs e)
         {
@@ -96,7 +96,7 @@ namespace AudioVisualizer
                 return;
             }
             Display.ZoomIn();
-            DisplayOnCanvas();
+            DisplayTimeDomain();
         }
     }
 }

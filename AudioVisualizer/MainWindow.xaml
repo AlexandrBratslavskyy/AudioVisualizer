@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioVisualizer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000">
+        Title="MainWindow" Height="450" Width="1200">
     
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="6*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
@@ -90,13 +90,51 @@
         <Border Grid.Column="1" Name="container1" BorderBrush="Black" BorderThickness="1">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                 <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                    <Canvas Name="canvas" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="{Binding Path=ActualHeight, ElementName=container1}" />
+                    <Canvas Name="TimeDomain" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="{Binding Path=ActualHeight, ElementName=container1}" />
                 </StackPanel>
             </ScrollViewer>
         </Border>
         
         <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1">
-            <!--filtering-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="45" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Margin="10" BorderBrush="Black" BorderThickness="1">
+                    <Canvas Name="FrequencyDomain" />
+                </Border>
+
+                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Windowing</TextBlock>
+
+                    <ComboBox Grid.Row="1" Grid.Column="0" Margin="2">
+                        <ComboBoxItem IsSelected="True">Rectangle</ComboBoxItem>
+                        <ComboBoxItem>Triangle</ComboBoxItem>
+                        <ComboBoxItem>Welch</ComboBoxItem>
+                        <ComboBoxItem>Hanning</ComboBoxItem>
+                    </ComboBox>
+
+                    <TextBlock Grid.Row="0"  Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Filter</TextBlock>
+
+                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="2">
+                        <ComboBoxItem IsSelected="True">Low Pass</ComboBoxItem>
+                        <ComboBoxItem>High Pass</ComboBoxItem>
+                        <ComboBoxItem>Band Pass</ComboBoxItem>
+                    </ComboBox>
+
+                </Grid>
+            </Grid>
         </Border>
         
     </Grid>

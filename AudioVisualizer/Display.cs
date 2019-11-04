@@ -30,7 +30,7 @@ namespace AudioVisualizer
         {
             ZOOM++;
         }
-        static public long DrawChart(Canvas canvas, S s)
+        static public long DrawTimeDomain(Canvas canvas, S s)
         {
             //clear previous
             canvas.Children.Clear();
