@@ -17,30 +17,31 @@ namespace AudioVisualizer
 {
     public class Display
     {
-        public void Add(int time, int signal)
-        {
-            data.Add(new Cartesian(time, signal));
-        }
-        public Cartesian Get(int i)
-        {
-            return data[i];
-        }
-        public int Size()
-        {
-            return data.Count;
-        }
-        private List<Cartesian> data = new List<Cartesian>();
 
         // Statics
-        static public void DrawChart(Canvas canvas ,Display display)
+
+        static private long ZOOM = 10;
+        static public void ZoomIn()
         {
+            if (ZOOM != 1)
+                ZOOM--;
+        }
+        static public void ZoomOut()
+        {
+            ZOOM++;
+        }
+        static public long DrawChart(Canvas canvas, S s)
+        {
+            //clear previous
             canvas.Children.Clear();
-            double Y = canvas.Height / 2;
+
+            //line showing signal zero
+            double Y = canvas.ActualHeight / 2;
             Line zeroline = new Line();
 
             zeroline.X1 = 0;
             zeroline.Y1 = Y;
-            zeroline.X2 = canvas.Width;
+            zeroline.X2 = s.Size() - ZOOM;
             zeroline.Y2 = Y;
 
             zeroline.Stroke = new SolidColorBrush(Colors.Black);
@@ -48,33 +49,29 @@ namespace AudioVisualizer
 
             canvas.Children.Add(zeroline);
 
-            for (int i = 0; i < display.Size() - 1; i++)
+            //compensate for limited space
+            double c = 1.0;
+            if (Y < s.GetMax())
+                c = s.GetMax() / Y;
+
+            //display on canvas
+            long i = 0;
+            for (long next = 0; next < s.Size() - ZOOM; i++)
             {
                 Line line = new Line();
-                Cartesian c1 = display.Get(i), c2 = display.Get(i + 1);
+                int c1 = s.Get(next), c2 = s.Get(next += ZOOM);
 
-                line.X1 = c1.Time;
-                line.Y1 = Y - c1.Signal;
-                line.X2 = c2.Time;
-                line.Y2 = Y - c2.Signal;
+                line.X1 = i;
+                line.Y1 = c * (Y - c1);
+                line.X2 = i;
+                line.Y2 = c * (Y - c2);
 
                 line.Stroke = new SolidColorBrush(Colors.Black);
                 line.StrokeThickness = 1.0;
 
                 canvas.Children.Add(line);
             }
+            return i;
         }
     }
-    public struct Cartesian
-    {
-        public int Time;
-        public int Signal;
-
-        public Cartesian(int time, int signal)
-        {
-            Time = time;
-            Signal = signal;
-        }
-    }
-    
 }

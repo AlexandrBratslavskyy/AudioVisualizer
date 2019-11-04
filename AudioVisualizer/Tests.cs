@@ -8,15 +8,25 @@ namespace AudioVisualizer
 {
     public class Tests
     {
-        static public Display TestDisplay()
+        static public S SimpleCosineWave()
         {
-            Display display = new Display();
-            int N = 10000, A = 200, f = 80;
-            for (int t=0; t< N; t++)
+            S s = new S();
+            long N = 10000, A = 200, f = 80;
+            for (long t=0; t< N; t++)
             {
-                display.Add(t, (int)(A * Math.Cos(2 * Math.PI * f * t /N)));
+                s.Add((int)(A * Math.Cos(2 * Math.PI * f * t /N)));
             }
-            return display;
+            return s;
+        }
+        static public S ComplexCosineWave()
+        {
+            S s = new S();
+            long N = 10000, A = 200, f1 = 80, f2 = 30;
+            for (long t = 0; t < N; t++)
+            {
+                s.Add((int)(A * Math.Cos(2 * Math.PI * f1 * t / N) + A * Math.Cos(2 * Math.PI * f2 * t / N)));
+            }
+            return s;
         }
     }
 }

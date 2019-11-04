@@ -15,13 +15,15 @@ namespace AudioVisualizer
             for (long i = 0; i < s.Size(); i++)
                 data.Add(s.Get(i));
         }
-        public void Add(int val)
+        public void Add(long val)
         {
-            data.Add(val);
+            data.Add((int)val);
+            if (val > max || -1 * val > max)
+                max = val;
         }
         public void Convolution(int c)
         {
-            for (int i = 0; i < c; i++)
+            for (int i = 0; i < c-1; i++)
                 Add(0);
         }
         public void Set(int t, int val)
@@ -32,27 +34,15 @@ namespace AudioVisualizer
         {
             return data[(int)t];
         }
+        public long GetMax()
+        {
+            return max;
+        }
         public int Size()
         {
             return data.Count;
         }
         private List<int> data = new List<int>();
-
-        // statics
-        static public S ReverseDFT(A a)
-        {
-            S s = new S();
-            long N = a.Size();
-            for (long t = 0; t < N; t++)
-            {
-                double samples = 0;
-                for (long f = 0; f < N; f++)
-                {
-                    samples += a.Get(f).getReal() * Math.Cos(2 * Math.PI * t * f / N) - a.Get(f).getImm() * Math.Cos(2 * Math.PI * t * f / N);
-                }
-                s.Add((int)samples);
-            }
-            return s;
-        }
+        private long max = 0;
     }
 }

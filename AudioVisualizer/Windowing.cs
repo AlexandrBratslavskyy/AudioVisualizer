@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AudioVisualizer
 {
-    public abstract class Window
+    public abstract class Windowing
     {
         abstract protected double Equation(long n, long N);
-        public S Windowing(S OGs, long N)
+        public S CreateWindow(S OGs, long N)
         {
             S NEWs = new S();
             double[] W = new double[N];
@@ -29,7 +29,7 @@ namespace AudioVisualizer
         }
 
         //statics
-        static public Window WINDOW = new RectangleWindow();
+        static public Windowing WINDOW = new RectangleWindow();
         static public void ChangeFilter(int newWindow)
         {
             switch (newWindow)
@@ -50,7 +50,7 @@ namespace AudioVisualizer
             }
         }
     }
-    public class RectangleWindow : Window
+    public class RectangleWindow : Windowing
     {
         //apply triangle windowing on samples
         protected override double Equation(long n, long N)
@@ -58,7 +58,7 @@ namespace AudioVisualizer
             return 1;
         }
     }
-    public class TriangleWindow : Window
+    public class TriangleWindow : Windowing
     {
         //apply triangle windowing on samples
         protected override double Equation(long n, long N)
@@ -66,7 +66,7 @@ namespace AudioVisualizer
             return 1 - Math.Abs((n - (N - 1) / 2) / (N / 2));
         }
     }
-    public class WelchWindow : Window
+    public class WelchWindow : Windowing
     {
         //apply Welch windowing on samples
         protected override double Equation(long n, long N)
@@ -74,7 +74,7 @@ namespace AudioVisualizer
             return 1 - (Math.Pow(((n - ((N - 1) / 2)) / ((N - 1) / 2)), 2));
         }
     }
-    public class HanningWindow : Window
+    public class HanningWindow : Windowing
     {
         //apply hanning windowing on samples
         protected override double Equation(long n, long N)

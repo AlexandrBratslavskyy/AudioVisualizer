@@ -5,12 +5,100 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioVisualizer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1000">
+    
     <Grid>
-        <Border Height="400" Width="800" BorderBrush="Blue" BorderThickness="1">
-            <Canvas Height="400" Width="800" Name="myCanvas">
-            
-                </Canvas>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="6*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="110" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold">Options</TextBlock>
+
+                <TextBlock Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Display</TextBlock>
+
+                <Border Grid.Row="2" Padding="10" Margin="10,0,10,0" BorderBrush="Black" BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Button Grid.Row="0" Height="20" Click="record">record</Button>
+
+                        <Button Grid.Row="1" Height="20" Click="browse">browse</Button>
+
+                        <Button Grid.Row="2" Height="20" Click="test">test</Button>
+
+                        <Button Grid.Row="3" Height="20" Click="save">save</Button>
+                    </Grid>
+                </Border>
+
+                <TextBlock Grid.Row="3" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Edit</TextBlock>
+
+                <Border Grid.Row="4" Padding="10" Margin="10,0,10,0" BorderBrush="Black" BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Button Grid.Row="0" Height="20" Click="cut">cut</Button>
+
+                        <Button Grid.Row="1" Height="20" Click="copy">copy</Button>
+
+                        <Button Grid.Row="2" Height="20" Click="paste">paste</Button>
+
+                    </Grid>
+                </Border>
+
+                <TextBlock Grid.Row="5" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Zoom</TextBlock>
+
+                <Border Grid.Row="6" Padding="1" Margin="10,1,10,1" BorderBrush="Black" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Margin="10,1,2,1" Click="zoomout">-</Button>
+
+                        <Button Grid.Column="1" Margin="2,1,10,1" Click="zoomin">+</Button>
+
+                    </Grid>
+                </Border>
+
+            </Grid>
         </Border>
+
+        <Border Grid.Column="1" Name="container1" BorderBrush="Black" BorderThickness="1">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Canvas Name="canvas" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="{Binding Path=ActualHeight, ElementName=container1}" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        
+        <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1">
+            <!--filtering-->
+        </Border>
+        
     </Grid>
+    
 </Window>

@@ -32,7 +32,7 @@ namespace AudioVisualizer
                 {
                     lst.Add(wav.data[i]);
                 }
-                Clipboard.SetDataObject(lst.ToArray());
+                ////////////////////////////////Clipboard.SetDataObject(lst.ToArray());
             }
 
             //right to left
@@ -43,7 +43,7 @@ namespace AudioVisualizer
                     lst.Add(wav.data[i]);
                 }
                 //put data on clipboard
-                Clipboard.SetDataObject(lst.ToArray());
+                //////////////////////////////////Clipboard.SetDataObject(lst.ToArray());
             }
         }
 
@@ -86,6 +86,7 @@ namespace AudioVisualizer
             Get elements from clipboard
             put those elements onto the graph and array
         */
+        /* //////////////////////////////////////////////////////////////////////////////////////////
         public void paste(int selStart, int selEnd, ref Wave wav)
         {
             //get data from clipboard
@@ -120,5 +121,6 @@ namespace AudioVisualizer
                 }
             }
         }
+        */////////////////////////////////////////////////////////////////////////////
     }
 }
