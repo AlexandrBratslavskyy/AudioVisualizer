@@ -18,7 +18,7 @@ namespace AudioVisualizer
                 W[n] = Equation(n, N);
             }
 
-            for (long t = 0, n = 0; n < OGs.Size(); t++)
+            for (long t = 0, n = 0; t < OGs.Size(); t++)
             {
                 NEWs.Add((int)(OGs.Get(t) * W[(int)n]));
                 n++;

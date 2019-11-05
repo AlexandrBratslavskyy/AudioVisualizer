@@ -8,7 +8,14 @@ namespace AudioVisualizer
 {
     public class S
     {
+        static public S ORIGINAL;
+        static public S COMPOSITE;
         public S() { }
+        public S(List<int> d)
+        {
+            for (long i = 0; i < d.Count; i++)
+                data.Add(d[(int)i]);
+        }
         // Copy constructor.
         public S(S s)
         {
@@ -46,9 +53,9 @@ namespace AudioVisualizer
         {
             data.RemoveRange(start, end - start);
         }
-        public void Copy(int start, int end)
+        public S Copy(int start, int end)
         {
-            data.GetRange(start, end - start);
+            return new S(data.GetRange(start, end - start));
         }
         public void Paste(int paste, S s)
         {

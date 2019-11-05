@@ -8,6 +8,7 @@ namespace AudioVisualizer
 {
     public class A
     {
+        static public A COMPLEX;
         public void Add(double real, double imaginary)
         {
             data.Add(new Complex(real, imaginary));

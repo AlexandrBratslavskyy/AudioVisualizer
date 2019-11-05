@@ -30,7 +30,7 @@ namespace AudioVisualizer
         {
             ZOOM++;
         }
-        static public long DrawTimeDomain(Canvas canvas, S s)
+        static public long DrawTimeDomain(Canvas canvas)
         {
             //clear previous
             canvas.Children.Clear();
@@ -41,7 +41,7 @@ namespace AudioVisualizer
 
             zeroline.X1 = 0;
             zeroline.Y1 = Y;
-            zeroline.X2 = s.Size() - ZOOM;
+            zeroline.X2 = S.COMPOSITE.Size() - ZOOM;
             zeroline.Y2 = Y;
 
             zeroline.Stroke = new SolidColorBrush(Colors.Black);
@@ -51,27 +51,71 @@ namespace AudioVisualizer
 
             //compensate for limited space
             double c = 1.0;
-            if (Y < s.GetMax())
-                c = s.GetMax() / Y;
+            if (Y < S.COMPOSITE.GetMax())
+                c = S.COMPOSITE.GetMax() / Y;
 
             //display on canvas
             long i = 0;
-            for (long next = 0; next < s.Size() - ZOOM; i++)
+            for (long next = 0; next < S.COMPOSITE.Size() - ZOOM; i++)
             {
                 Line line = new Line();
-                int c1 = s.Get(next), c2 = s.Get(next += ZOOM);
+                int c1 = S.COMPOSITE.Get(next), c2 = S.COMPOSITE.Get(next += ZOOM);
 
                 line.X1 = i;
-                line.Y1 = c * (Y - c1);
                 line.X2 = i;
+                line.Y1 = c * (Y - c1);
                 line.Y2 = c * (Y - c2);
 
-                line.Stroke = new SolidColorBrush(Colors.Black);
+                line.Stroke = new SolidColorBrush(Colors.Blue);
                 line.StrokeThickness = 1.0;
 
                 canvas.Children.Add(line);
             }
             return i;
+        }
+
+        static public void DrawFrequencyDomain(Canvas canvas)
+        {
+            //clear previous
+            canvas.Children.Clear();
+
+            //line showing signal zero
+            double Y = canvas.ActualHeight, X = canvas.ActualWidth / 12;
+
+            //display lines on canvas
+            long i = 0, j = 1;
+            for (double l = 0; l < canvas.ActualWidth; l+=X)
+            {
+                Line line = new Line(), value = new Line();
+
+                line.X1 = l;
+                line.X2 = l;
+                line.Y1 = 0;
+                line.Y2 = Y;
+
+                line.Stroke = new SolidColorBrush(Colors.Black);
+                line.StrokeThickness = 1.0;
+                
+                double v = 0;
+                for (; i < j * A.COMPLEX.Size() / 12; i++)
+                {
+                    v += Math.Abs(A.COMPLEX.Get(i).getReal());
+                }
+                j++;
+
+                value.X1 = l + X / 2;
+                value.X2 = l + X / 2;
+                value.Y1 = Y - v;
+                value.Y2 = Y;
+
+                value.Stroke = new SolidColorBrush(Colors.Red);
+                value.StrokeThickness = X;
+
+                canvas.Children.Add(value);
+                canvas.Children.Add(line);
+            }
+            //display values
+
         }
     }
 }

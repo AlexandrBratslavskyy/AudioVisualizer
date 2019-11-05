@@ -9,19 +9,20 @@ namespace AudioVisualizer
     class Algoriths
     {
         //statics
-        static public A DFT(S s)
+        static public A DFT(S s, long N)
         {
             A a = new A();
-            long N = s.Size();
-            for (long f = 0; f < N; f++)
+            long M = s.Size();
+            for (long f = 0; f < M; f += M/N)
             {
+                // slow, needs threading
                 double real = 0, imm = 0;
-                for (long t = 0; t < N; t++)
+                for (long t = 0; t < M; t += M/N)
                 {
-                    real += s.Get(t) / N * Math.Cos(2 * Math.PI * t * f / N);
-                    imm -= s.Get(t) / N * Math.Sin(2 * Math.PI * t * f / N);
+                    real += s.Get(t) * Math.Cos(2 * Math.PI * t * f / M);
+                    imm -= s.Get(t) * Math.Sin(2 * Math.PI * t * f / M);
                 }
-                a.Add(real, imm);
+                a.Add(real / M, imm / M);
             }
             return a;
         }
