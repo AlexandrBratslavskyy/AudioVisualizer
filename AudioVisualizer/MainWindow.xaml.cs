@@ -93,21 +93,29 @@ namespace AudioVisualizer
         //windowing
         void rectangle(object sender, RoutedEventArgs e)
         {
+            if (S.ORIGINAL == null)
+                return;
             Windowing.ChangeFilter(0);
             NewWindow();
         }
         void triangle(object sender, RoutedEventArgs e)
         {
+            if (S.ORIGINAL == null)
+                return;
             Windowing.ChangeFilter(1);
             NewWindow();
         }
         void welch(object sender, RoutedEventArgs e)
         {
+            if (S.ORIGINAL == null)
+                return;
             Windowing.ChangeFilter(2);
             NewWindow();
         }
         void hanning(object sender, RoutedEventArgs e)
         {
+            if (S.ORIGINAL == null)
+                return;
             Windowing.ChangeFilter(3);
             NewWindow();
         }
@@ -115,16 +123,28 @@ namespace AudioVisualizer
         //filtering
         void low(object sender, RoutedEventArgs e)
         {
+            /*
+            if (S.ORIGINAL == null)
+                return;
+            */
             Filter.ChangeFilter(0);
             NewFilter();
         }
         void high(object sender, RoutedEventArgs e)
         {
+            /*
+            if (S.ORIGINAL == null)
+                return;
+            */
             Filter.ChangeFilter(1);
             NewFilter();
         }
         void band(object sender, RoutedEventArgs e)
         {
+            /*
+            if (S.ORIGINAL == null)
+                return;
+            */
             Filter.ChangeFilter(2);
             NewFilter();
         }
@@ -165,58 +185,35 @@ namespace AudioVisualizer
         void zoomout(object sender, RoutedEventArgs e)
         {
             if(S.ORIGINAL == null)
-            { 
-                MessageBox.Show("Select Waveform First", "Zoom Out");
                 return;
-            }
             Display.ZoomOut();
             DisplayTimeDomain();
         }
         void zoomin(object sender, RoutedEventArgs e)
         {
             if (S.ORIGINAL == null)
-            {
-                MessageBox.Show("Select Waveform First", "Zoom In");
                 return;
-            }
             Display.ZoomIn();
             DisplayTimeDomain();
         }
-
-        /////////////////////////////////////////////////////////////////////////////////
-        public void dragfilterlineleft(object sender, DragDeltaEventArgs e)
-        {
-            Thumb thumb = sender as Thumb;
-            Point m = Mouse.GetPosition(FilterCanvas);
-            if(m.X >= 0 && m.X <= FilterCanvas.ActualWidth/2)
-            Canvas.SetLeft(thumb, Canvas.GetLeft(thumb) + e.HorizontalChange);
-            //Canvas.SetTop(thumb, Canvas.GetTop(thumb) + e.VerticalChange);
-        }
-
-        public void dropfilterlineleft(object sender, DragCompletedEventArgs e)
-        {
-            var thumb = sender as Thumb;
-            Canvas.SetLeft(thumb, 0);
-        }
-        /////////////////////////////////////////////////////////////////////////////////
         
         //draging and droping
         //drag
         public void dragfilterleft1(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterLeft1(left1, right1, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterLeft1(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
         }
         public void dragfilterleft2(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterLeft2(left2, right2, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterLeft2(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
         }
         public void dragfilterright1(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterRight1(left1, right1, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterRight1(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
         }
         public void dragfilterright2(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterRight2(left2, right2, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterRight2(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
         }
         //drop
         public void dropfilterleft1(object sender, DragCompletedEventArgs e)
