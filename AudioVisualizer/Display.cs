@@ -73,19 +73,19 @@ namespace AudioVisualizer
             }
             return i;
         }
-
         static public void DrawFrequencyDomain(Canvas canvas)
         {
             //clear previous
             canvas.Children.Clear();
 
             //line showing signal zero
-            double Y = canvas.ActualHeight, X = canvas.ActualWidth / 12;
+            double Y = canvas.ActualHeight, X = canvas.ActualWidth / Filter.getSize();
 
-            //display lines on canvas
+            //display filters
             long i = 0, j = 1;
             for (double l = 0; l < canvas.ActualWidth; l+=X)
             {
+                //display lines on canvas
                 Line line = new Line(), value = new Line();
 
                 line.X1 = l;
@@ -95,9 +95,10 @@ namespace AudioVisualizer
 
                 line.Stroke = new SolidColorBrush(Colors.Black);
                 line.StrokeThickness = 1.0;
-                
+
+                //display values
                 double v = 0;
-                for (; i < j * A.COMPLEX.Size() / 12; i++)
+                for (; i < j * A.COMPLEX.Size() / Filter.getSize() && i < A.COMPLEX.Size(); i++)
                 {
                     v += Math.Abs(A.COMPLEX.Get(i).getReal());
                 }
@@ -111,11 +112,10 @@ namespace AudioVisualizer
                 value.Stroke = new SolidColorBrush(Colors.Red);
                 value.StrokeThickness = X;
 
+                // add both - order matters I think
                 canvas.Children.Add(value);
                 canvas.Children.Add(line);
             }
-            //display values
-
         }
     }
 }

@@ -63,57 +63,49 @@ namespace AudioVisualizer
         //drawing and dragging
         public override void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
         {
+            double width = canvas.ActualWidth, bin = width / Filter.getSize();
+
             left1.Visibility = Visibility.Visible;
             left2.Visibility = Visibility.Collapsed;
             right1.Visibility = Visibility.Visible;
             right2.Visibility = Visibility.Collapsed;
 
-            Canvas.SetLeft(left1, canvas.ActualWidth / 2);
-            Canvas.SetLeft(right1, canvas.ActualWidth / 2);
+            Canvas.SetLeft(left1, width / 2);
+            Canvas.SetLeft(right1, width / 2 + bin);
 
             rect1.Visibility = Visibility.Visible;
             rect2.Visibility = Visibility.Visible;
 
-            rect1.Width = canvas.ActualWidth / 2;
-            rect2.Width = canvas.ActualWidth / 2;
+            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
+        }
+        protected override void DrawRect(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2)
+        {
+            rect1.Width = Canvas.GetLeft(left1);
+            rect2.Width = Canvas.GetLeft(left1);
 
-            Canvas.SetLeft(rect1, 0);
-            Canvas.SetLeft(rect2, canvas.ActualWidth / 2);
+            Canvas.SetLeft(rect2, Canvas.GetLeft(right1));
         }
         public override void DragFilterLeft1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
         {
-            Point m = Mouse.GetPosition(canvas);
-            if (m.X >= 0 && m.X <= canvas.ActualWidth / 2)
+            double width = canvas.ActualWidth, bin = width / Filter.getSize(), pos = Mouse.GetPosition(canvas).X;
+
+            if (pos >= bin && pos <= width / 2)
             {
                 Canvas.SetLeft(left1, Canvas.GetLeft(left1) + e.HorizontalChange);
-                Canvas.SetLeft(right1, canvas.ActualWidth - Canvas.GetLeft(left1));
-
-                rect1.Width = Canvas.GetLeft(left1);
-                rect2.Width = Canvas.GetLeft(left1);
-
-                Canvas.SetLeft(rect2, Canvas.GetLeft(right1));
+                Canvas.SetLeft(right1, width - Canvas.GetLeft(left1) + bin);
             }
-            else if (m.X >= canvas.ActualWidth / 2)
+            else if (pos >= width / 2)
             {
-                Canvas.SetLeft(left1, canvas.ActualWidth / 2);
-                Canvas.SetLeft(right1, canvas.ActualWidth / 2);
-
-                rect1.Width = canvas.ActualWidth / 2;
-                rect2.Width = canvas.ActualWidth / 2;
-
-                Canvas.SetLeft(rect2, canvas.ActualWidth / 2);
+                Canvas.SetLeft(left1, width / 2);
+                Canvas.SetLeft(right1, width / 2 + bin);
             }
             else
             {
-                Canvas.SetLeft(left1, 0);
-                Canvas.SetLeft(right1, canvas.ActualWidth);
-
-                rect1.Width = 0;
-                rect2.Width = 0;
-
-                Canvas.SetLeft(rect2, 0);
+                Canvas.SetLeft(left1, bin);
+                Canvas.SetLeft(right1, width);
             }
 
+            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
         }
         public override void DragFilterLeft2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
         {
@@ -121,55 +113,58 @@ namespace AudioVisualizer
         }
         public override void DragFilterRight1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
         {
-            Point m = Mouse.GetPosition(canvas);
-            if (m.X >= canvas.ActualWidth / 2 && m.X <= canvas.ActualWidth)
+            double width = canvas.ActualWidth, bin = width / Filter.getSize(), pos = Mouse.GetPosition(canvas).X;
+
+            if (pos >= width / 2 + bin && pos <= width)
             {
                 Canvas.SetLeft(right1, Canvas.GetLeft(right1) + e.HorizontalChange);
-                Canvas.SetLeft(left1, canvas.ActualWidth - (int)Canvas.GetLeft(right1));
-                
-                rect1.Width = Canvas.GetLeft(left1);
-                rect2.Width = Canvas.GetLeft(left1);
-
-                Canvas.SetLeft(rect2, Canvas.GetLeft(right1));
+                Canvas.SetLeft(left1, width - Canvas.GetLeft(right1) + bin);
             }
-            else if (m.X <= canvas.ActualWidth / 2)
+            else if (pos <= width / 2 + bin)
             {
-                Canvas.SetLeft(right1, canvas.ActualWidth / 2);
-                Canvas.SetLeft(left1, canvas.ActualWidth / 2);
-
-                rect1.Width = canvas.ActualWidth / 2;
-                rect2.Width = canvas.ActualWidth / 2;
-
-                Canvas.SetLeft(rect2, canvas.ActualWidth / 2);
+                Canvas.SetLeft(right1, width / 2 + bin);
+                Canvas.SetLeft(left1, width / 2);
             }
             else
             {
-                Canvas.SetLeft(right1, canvas.ActualWidth);
-                Canvas.SetLeft(left1, 0);
-
-                rect1.Width = 0;
-                rect2.Width = 0;
-
-                Canvas.SetLeft(rect2, 0);
+                Canvas.SetLeft(right1, width);
+                Canvas.SetLeft(left1, bin);
             }
+
+            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
         }
         public override void DragFilterRight2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
         {
             throw new NotImplementedException("Low Pass doesn't have second Thumb");
         }
-        public override void DropFilterLeft1(Thumb left1, Thumb right1, Rectangle rect1, Rectangle rect2, Canvas canvas)
+        public override void DropFilterLeft1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
         {
             throw new NotImplementedException("TODO");
         }
-        public override void DropFilterLeft2(Thumb left2, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
+        public override void DropFilterLeft2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
         {
             throw new NotImplementedException("Low Pass doesn't have second Thumb");
         }
-        public override void DropFilterRight1(Thumb left1, Thumb right1, Rectangle rect1, Rectangle rect2, Canvas canvas)
+        public override void DropFilterRight1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
         {
-            throw new NotImplementedException("TODO");
+            double width = canvas.ActualWidth, bin = width / Filter.getSize(), binNumber = Filter.getSize() / 2 + 1;
+
+            for (double i = binNumber, distance = width; i <= Filter.getSize(); ++i)
+            {
+                if (Math.Abs(i * bin - Canvas.GetLeft(right1)) < distance)
+                {
+                    distance = Math.Abs(i * bin - Canvas.GetLeft(right1));
+                    binNumber = i;
+                }
+            }
+
+            Canvas.SetLeft(right1, binNumber * bin);
+            Canvas.SetLeft(left1, width - Canvas.GetLeft(right1) + bin);
+
+            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
+
         }
-        public override void DropFilterRight2(Thumb left2, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
+        public override void DropFilterRight2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
         {
             throw new NotImplementedException("Low Pass doesn't have second Thumb");
         }

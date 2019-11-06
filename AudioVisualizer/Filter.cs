@@ -20,14 +20,15 @@ namespace AudioVisualizer
         public abstract A CreateFilter(long frequencyBin1, long frequencyBin2, long N);
         // visual filter
         public abstract void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
+        protected abstract void DrawRect(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2);
         public abstract void DragFilterLeft1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e);
         public abstract void DragFilterLeft2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e);
         public abstract void DragFilterRight1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e);
         public abstract void DragFilterRight2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e);
-        public abstract void DropFilterLeft1(Thumb left1, Thumb right1, Rectangle rect1, Rectangle rect2, Canvas canvas);
-        public abstract void DropFilterLeft2(Thumb left2, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
-        public abstract void DropFilterRight1(Thumb left1, Thumb right1, Rectangle rect1, Rectangle rect2, Canvas canvas);
-        public abstract void DropFilterRight2(Thumb left2, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
+        public abstract void DropFilterLeft1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
+        public abstract void DropFilterLeft2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
+        public abstract void DropFilterRight1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
+        public abstract void DropFilterRight2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
         //statics
         static public Filter FILTER = new FilterLowPass();
         static public void ChangeFilter(int newFilter)
@@ -45,6 +46,21 @@ namespace AudioVisualizer
                     FILTER = new FilterLowPass();
                     break;
             }
+        }
+        static private long FILTERSIZE = 12;
+        static public void SmallerSize()
+        {
+            if (FILTERSIZE != 2)
+                FILTERSIZE -= 2;
+        }
+        static public void BiggerSize()
+        {
+            if(FILTERSIZE < A.COMPLEX.Size())
+                FILTERSIZE += 2;
+        }
+        static public long getSize()
+        {
+            return FILTERSIZE;
         }
     }
 }

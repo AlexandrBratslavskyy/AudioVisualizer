@@ -226,7 +226,7 @@ namespace AudioVisualizer
         }
         public void dropfilterright1(object sender, DragCompletedEventArgs e)
         {
-            //TODO
+            Filter.FILTER.DropFilterRight1(left1, left2, right1, right2, rect1, rect2, FilterCanvas);
         }
         public void dropfilterright2(object sender, DragCompletedEventArgs e)
         {
