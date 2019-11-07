@@ -60,7 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="A.cs" />
-    <Compile Include="Algoriths.cs" />
+    <Compile Include="Algorithms.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="Display.cs" />

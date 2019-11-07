@@ -24,46 +24,46 @@ namespace AudioVisualizer
             [1, 1, 1, 1, 1, 1,            0, 0, 0, 0,    0,    0, 0, 0, 0, 1, 1, 1, 1, 1]
                             freq(cutoff) ---------------> <---------------
         */
-        public override A CreateFilter(long frequencyBin1, long frequencyBin2, long N)
+        public override void CreateFilter()
         {
-            long nyquistLimit = N / 2;
-            //error checking
-            if (frequencyBin1 > nyquistLimit)
-            {
-                frequencyBin1 = nyquistLimit - (frequencyBin1 - nyquistLimit);
-            }
-
-            long difference = ((nyquistLimit - frequencyBin1) * 2) + 1;
             A filter = new A();
 
             long i;
 
             //beginning of filter
-            for (i = 0; i <= frequencyBin1; i++)
+            for (i = 0; i <= fl1; i++)
             {
                 filter.Add(1, 1);
             }
 
             //middle of filter
-            for (; i <= frequencyBin1 + difference; i++)
+            for (; i <= fr1; i++)
             {
                 filter.Add(0, 0);
             }
 
             //end of filter
-            for (; i < N; i++)
+            for (; i < A.getN(); i++)
             {
                 filter.Add(1, 1);
             }
 
             //return filter;
-            return filter;
+            Filter.WEIGHTS = Algorithms.ReverseDFT(filter);
         }
 
         //drawing and dragging
         public override void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
         {
-            double width = canvas.ActualWidth, bin = width / Filter.getSize();
+            this.left1 = left1;
+            this.left2 = left2;
+            this.right1 = right1;
+            this.right2 = right2;
+            this.rect1 = rect1;
+            this.rect2 = rect2;
+            this.canvas = canvas;
+
+            double width = canvas.ActualWidth, bin = width / A.getN();
 
             left1.Visibility = Visibility.Visible;
             left2.Visibility = Visibility.Collapsed;
@@ -76,18 +76,23 @@ namespace AudioVisualizer
             rect1.Visibility = Visibility.Visible;
             rect2.Visibility = Visibility.Visible;
 
-            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
+            DrawRect();
+
+            fl1 = A.getN() / 2;
+            fr1 = A.getN() / 2 + 1;
+
+            CreateFilter();
         }
-        protected override void DrawRect(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2)
+        protected override void DrawRect()
         {
             rect1.Width = Canvas.GetLeft(left1);
             rect2.Width = Canvas.GetLeft(left1);
 
             Canvas.SetLeft(rect2, Canvas.GetLeft(right1));
         }
-        public override void DragFilterLeft1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
+        public override void DragFilterLeft1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / Filter.getSize(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= bin && pos <= width / 2)
             {
@@ -105,15 +110,15 @@ namespace AudioVisualizer
                 Canvas.SetLeft(right1, width);
             }
 
-            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
+            DrawRect();
         }
-        public override void DragFilterLeft2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
+        public override void DragFilterLeft2(DragDeltaEventArgs e)
         {
             throw new NotImplementedException("Low Pass doesn't have second Thumb");
         }
-        public override void DragFilterRight1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
+        public override void DragFilterRight1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / Filter.getSize(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= width / 2 + bin && pos <= width)
             {
@@ -131,25 +136,44 @@ namespace AudioVisualizer
                 Canvas.SetLeft(left1, bin);
             }
 
-            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
+            DrawRect();
         }
-        public override void DragFilterRight2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, DragDeltaEventArgs e)
+        public override void DragFilterRight2(DragDeltaEventArgs e)
         {
             throw new NotImplementedException("Low Pass doesn't have second Thumb");
         }
-        public override void DropFilterLeft1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
+        public override void DropFilterLeft1()
         {
-            throw new NotImplementedException("TODO");
-        }
-        public override void DropFilterLeft2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
-        {
-            throw new NotImplementedException("Low Pass doesn't have second Thumb");
-        }
-        public override void DropFilterRight1(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
-        {
-            double width = canvas.ActualWidth, bin = width / Filter.getSize(), binNumber = Filter.getSize() / 2 + 1;
+            double width = canvas.ActualWidth, bin = width / A.getN(), binNumber = 1;
 
-            for (double i = binNumber, distance = width; i <= Filter.getSize(); ++i)
+            for (double i = binNumber, distance = width; i <= A.getN() / 2; ++i)
+            {
+                if (Math.Abs(i * bin - Canvas.GetLeft(left1)) < distance)
+                {
+                    distance = Math.Abs(i * bin - Canvas.GetLeft(left1));
+                    binNumber = i;
+                }
+            }
+
+            Canvas.SetLeft(left1, binNumber * bin);
+            Canvas.SetLeft(right1, width - Canvas.GetLeft(left1) + bin);
+
+            DrawRect();
+
+            fl1 = (long)binNumber - 1;
+            fr1 = A.getN() - (long)binNumber;
+
+            CreateFilter();
+        }
+        public override void DropFilterLeft2()
+        {
+            throw new NotImplementedException("Low Pass doesn't have second Thumb");
+        }
+        public override void DropFilterRight1()
+        {
+            double width = canvas.ActualWidth, bin = width / A.getN(), binNumber = A.getN() / 2 + 1;
+
+            for (double i = binNumber, distance = width; i <= A.getN(); ++i)
             {
                 if (Math.Abs(i * bin - Canvas.GetLeft(right1)) < distance)
                 {
@@ -161,10 +185,9 @@ namespace AudioVisualizer
             Canvas.SetLeft(right1, binNumber * bin);
             Canvas.SetLeft(left1, width - Canvas.GetLeft(right1) + bin);
 
-            this.DrawRect(left1, left2, right1, right2, rect1, rect2);
-
+            this.DrawRect();
         }
-        public override void DropFilterRight2(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
+        public override void DropFilterRight2()
         {
             throw new NotImplementedException("Low Pass doesn't have second Thumb");
         }

@@ -62,9 +62,9 @@
 
                     <ComboBox Grid.Row="5" Margin="10,2">
                         <ComboBoxItem PreviewMouseLeftButtonDown="low" IsSelected="True">Low Pass</ComboBoxItem>
-                        <ComboBoxItem PreviewMouseLeftButtonDown="high">High Pass</ComboBoxItem>
+                        <!--<ComboBoxItem PreviewMouseLeftButtonDown="high">High Pass</ComboBoxItem>
                         <ComboBoxItem PreviewMouseLeftButtonDown="band">Band Pass</ComboBoxItem>
-                    </ComboBox>
+                    --></ComboBox>
 
                 </Grid>
                 

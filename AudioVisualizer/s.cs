@@ -9,9 +9,10 @@ namespace AudioVisualizer
     public class S
     {
         static public S ORIGINAL;
-        static public S COMPOSITE;
+        static public S WINDOWED;
+        static public S FILTERED;
         public S() { }
-        public S(List<int> d)
+        public S(List<double> d)
         {
             for (long i = 0; i < d.Count; i++)
                 data.Add(d[(int)i]);
@@ -22,30 +23,30 @@ namespace AudioVisualizer
             for (long i = 0; i < s.Size(); i++)
                 data.Add(s.Get(i));
         }
-        public void Add(long val)
+        public void Add(double val)
         {
-            data.Add((int)val);
+            data.Add(val);
             if (val > max || -1 * val > max)
                 max = val;
         }
-        public void Convolution(int c)
+        public void Convolution(long c)
         {
             for (int i = 0; i < c-1; i++)
                 Add(0);
         }
-        public void Set(int t, int val)
+        public void Set(long t, double val)
         {
-            data[t] = val;
+            data[(int)t] = val;
         }
-        public int Get(long t)
+        public double Get(long t)
         {
             return data[(int)t];
         }
-        public long GetMax()
+        public double GetMax()
         {
             return max;
         }
-        public int Size()
+        public long Size()
         {
             return data.Count;
         }
@@ -62,7 +63,7 @@ namespace AudioVisualizer
             for(int i = 0; i < s.Size(); i++)
                 data.Insert(paste + i, s.Get(i));
         }
-        private List<int> data = new List<int>();
-        private long max = 0;
+        private List<double> data = new List<double>();
+        private double max = 0;
     }
 }

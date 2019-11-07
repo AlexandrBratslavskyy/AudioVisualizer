@@ -41,7 +41,7 @@ namespace AudioVisualizer
 
             zeroline.X1 = 0;
             zeroline.Y1 = Y;
-            zeroline.X2 = S.COMPOSITE.Size() - ZOOM;
+            zeroline.X2 = S.FILTERED.Size() - ZOOM;
             zeroline.Y2 = Y;
 
             zeroline.Stroke = new SolidColorBrush(Colors.Black);
@@ -51,15 +51,15 @@ namespace AudioVisualizer
 
             //compensate for limited space
             double c = 1.0;
-            if (Y < S.COMPOSITE.GetMax())
-                c = S.COMPOSITE.GetMax() / Y;
+            if (Y < S.FILTERED.GetMax())
+                c = S.FILTERED.GetMax() / Y;
 
             //display on canvas
             long i = 0;
-            for (long next = 0; next < S.COMPOSITE.Size() - ZOOM; i++)
+            for (long next = 0; next < S.FILTERED.Size() - ZOOM; i++)
             {
                 Line line = new Line();
-                int c1 = S.COMPOSITE.Get(next), c2 = S.COMPOSITE.Get(next += ZOOM);
+                double c1 = S.FILTERED.Get(next), c2 = S.FILTERED.Get(next += ZOOM);
 
                 line.X1 = i;
                 line.X2 = i;
@@ -79,7 +79,7 @@ namespace AudioVisualizer
             canvas.Children.Clear();
 
             //line showing signal zero
-            double Y = canvas.ActualHeight, X = canvas.ActualWidth / Filter.getSize();
+            double Y = canvas.ActualHeight, X = canvas.ActualWidth / A.getN();
 
             //display filters
             long i = 0, j = 1;
@@ -98,7 +98,7 @@ namespace AudioVisualizer
 
                 //display values
                 double v = 0;
-                for (; i < j * A.COMPLEX.Size() / Filter.getSize() && i < A.COMPLEX.Size(); i++)
+                for (; i < j * A.COMPLEX.Size() / A.getN() && i < A.COMPLEX.Size(); i++)
                 {
                     v += Math.Abs(A.COMPLEX.Get(i).getReal());
                 }

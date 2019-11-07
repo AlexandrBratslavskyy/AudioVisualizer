@@ -26,27 +26,42 @@ namespace AudioVisualizer
         {
             InitializeComponent();
         }
-        void NewSignal(S s)
+        //New signal added
+        void CreateSignal(S s)
         {
             //save original
             S.ORIGINAL = s;
+            //windowing
+            CreateWindow();
+        }
+        void CreateWindow()
+        {
+            //windowing
+            S.WINDOWED = Windowing.WINDOW.CreateWindow(S.ORIGINAL, S.ORIGINAL.Size());
+            //freq domain
+            CreateComplex();
+        }
+        void CreateComplex()
+        {
             //dft
-            A.COMPLEX = Algoriths.DFT(s, 12);
+            A.COMPLEX = Algorithms.DFT(S.WINDOWED);
             //display freq domain
             DisplayFrequencyDomain();
-            //windowing
-            NewWindow();
+            //draw filter
+            CreateFilter();
         }
-        void NewFilter()
+        //
+        void CreateFilter()
         {
+            //draw filter
             Filter.FILTER.DrawFilter(left1, left2, right1, right2, rect1, rect2, FilterCanvas);
+            //convolution
+            CreateFilterRange();
         }
-        void NewWindow()
+        void CreateFilterRange()
         {
-            //revdft
-            S rdft = Algoriths.ReverseDFT(A.COMPLEX);
-            //windowing
-            S.COMPOSITE = Windowing.WINDOW.CreateWindow(rdft, rdft.Size());
+            //convolution
+            S.FILTERED = Filter.FILTER.Convolution(S.WINDOWED);
             //display time domain
             DisplayTimeDomain();
         }
@@ -76,10 +91,10 @@ namespace AudioVisualizer
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    NewSignal(Tests.SimpleCosineWave());
+                    CreateSignal(Tests.SimpleCosineWave());
                     break;
                 case MessageBoxResult.No:
-                    NewSignal(Tests.ComplexCosineWave());
+                    CreateSignal(Tests.ComplexCosineWave());
                     break;
                 case MessageBoxResult.Cancel:
                     break;
@@ -96,57 +111,51 @@ namespace AudioVisualizer
             if (S.ORIGINAL == null)
                 return;
             Windowing.ChangeFilter(0);
-            NewWindow();
+            CreateWindow();
         }
         void triangle(object sender, RoutedEventArgs e)
         {
             if (S.ORIGINAL == null)
                 return;
             Windowing.ChangeFilter(1);
-            NewWindow();
+            CreateWindow();
         }
         void welch(object sender, RoutedEventArgs e)
         {
             if (S.ORIGINAL == null)
                 return;
             Windowing.ChangeFilter(2);
-            NewWindow();
+            CreateWindow();
         }
         void hanning(object sender, RoutedEventArgs e)
         {
             if (S.ORIGINAL == null)
                 return;
             Windowing.ChangeFilter(3);
-            NewWindow();
+            CreateWindow();
         }
 
         //filtering
         void low(object sender, RoutedEventArgs e)
         {
-            /*
             if (S.ORIGINAL == null)
                 return;
-            */
             Filter.ChangeFilter(0);
-            NewFilter();
+            CreateFilter();
         }
         void high(object sender, RoutedEventArgs e)
         {
-            /*
             if (S.ORIGINAL == null)
                 return;
-            */
             Filter.ChangeFilter(1);
-            NewFilter();
+            CreateFilter();
         }
         void band(object sender, RoutedEventArgs e)
         {
-            /*
             if (S.ORIGINAL == null)
                 return;
-            */
             Filter.ChangeFilter(2);
-            NewFilter();
+            CreateFilter();
         }
 
         //record
@@ -201,36 +210,40 @@ namespace AudioVisualizer
         //drag
         public void dragfilterleft1(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterLeft1(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterLeft1(e);
         }
         public void dragfilterleft2(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterLeft2(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterLeft2(e);
         }
         public void dragfilterright1(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterRight1(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterRight1(e);
         }
         public void dragfilterright2(object sender, DragDeltaEventArgs e)
         {
-            Filter.FILTER.DragFilterRight2(left1, left2, right1, right2, rect1, rect2, FilterCanvas, e);
+            Filter.FILTER.DragFilterRight2(e);
         }
         //drop
         public void dropfilterleft1(object sender, DragCompletedEventArgs e)
         {
-            //TODO
+            Filter.FILTER.DropFilterLeft1();
+            CreateFilterRange();
         }
         public void dropfilterleft2(object sender, DragCompletedEventArgs e)
         {
-            //TODO
+            Filter.FILTER.DropFilterLeft2();
+            CreateFilterRange();
         }
         public void dropfilterright1(object sender, DragCompletedEventArgs e)
         {
-            Filter.FILTER.DropFilterRight1(left1, left2, right1, right2, rect1, rect2, FilterCanvas);
+            Filter.FILTER.DropFilterRight1();
+            CreateFilterRange();
         }
         public void dropfilterright2(object sender, DragCompletedEventArgs e)
         {
-            //TODO
+            Filter.FILTER.DropFilterRight2();
+            CreateFilterRange();
         }
     }
 }

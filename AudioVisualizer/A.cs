@@ -8,7 +8,6 @@ namespace AudioVisualizer
 {
     public class A
     {
-        static public A COMPLEX;
         public void Add(double real, double imaginary)
         {
             data.Add(new Complex(real, imaginary));
@@ -30,11 +29,18 @@ namespace AudioVisualizer
             return data.Count;
         }
         private List<Complex> data = new List<Complex>();
-        
-        //Return amplitude using pythag sqrt(real*real + im*im)
-        public double getAmp(Complex num)
+
+        //statics
+        static public A COMPLEX;
+        static private long N = 12;
+        static public void SetN(long n)
         {
-            return Math.Sqrt(Math.Pow(num.getReal(), 2) + Math.Pow(num.getImm(), 2));
+            if (n < 2 && n % 2 == 0)
+                N = n;
+        }
+        static public long getN()
+        {
+            return N;
         }
     }
     //class for Complex numbers
@@ -75,12 +81,10 @@ namespace AudioVisualizer
         {
             return im;
         }
-
-        //statics
         //Return amplitude using pythag sqrt(real*real + im*im)
-        static public double getAmp(Complex num)
+        public double getAmp()
         {
-            return Math.Sqrt(Math.Pow(num.getReal(), 2) + Math.Pow(num.getImm(), 2));
+            return Math.Sqrt(Math.Pow(re, 2) + Math.Pow(im, 2));
         }
     }
 }
