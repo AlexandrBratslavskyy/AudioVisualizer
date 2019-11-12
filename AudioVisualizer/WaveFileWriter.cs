@@ -13,7 +13,7 @@ namespace AudioVisualizer
     {
         //Write a WAVE file to the specified stream using
         //the information provided by the Wave object
-        public void Write(Stream stream, Wave wav)
+        static public void Write(Stream stream, Wave wav)
         {
             BinaryWriter bw = new BinaryWriter(stream);
             bw.Write(wav.chunkID);

@@ -14,7 +14,7 @@ namespace AudioVisualizer
     {
         //Read in a wave file from a stream and store the header information
         //into a Wave object and the data in a byte array
-        public Byte[] Read(Stream stream, out Wave wav)
+        static public Byte[] Read(Stream stream, out Wave wav)
         {
             Wave WaveFile = new Wave();
             BinaryReader br = new BinaryReader(stream);

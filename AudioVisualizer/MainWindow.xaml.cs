@@ -21,6 +21,7 @@ namespace AudioVisualizer
 {
     public partial class MainWindow : System.Windows.Window
     {
+        Wave WAVE;
         //Start
         public MainWindow()
         {
@@ -83,7 +84,11 @@ namespace AudioVisualizer
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "(*.wav)|*.wav";
             if (openFileDialog.ShowDialog() == true)
-                MessageBox.Show("Can't open wav files", "TODO");
+            {
+                WAVE = new Wave();
+                WAVE.Read(File.Open(openFileDialog.FileName, FileMode.Open));
+            }
+            //MessageBox.Show("Can't open wav files", "TODO");
         }
         void test(object sender, RoutedEventArgs e)
         {
@@ -102,7 +107,11 @@ namespace AudioVisualizer
         }
         void save(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't save wav files", "TODO");
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "(*.wav)|*.wav";
+            if (saveFileDialog.ShowDialog() == true)
+                WAVE.Write(File.Create(saveFileDialog.FileName));
+            //MessageBox.Show("Can't save wav files", "TODO");
         }
 
         //windowing
