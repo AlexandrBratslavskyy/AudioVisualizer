@@ -29,24 +29,19 @@ namespace AudioVisualizer
         }
 
         //statics
-        static public Windowing WINDOW = new RectangleWindow();
-        static public void ChangeFilter(int newWindow)
+        static public Windowing ChangeFilter(int newWindow)
         {
             switch (newWindow)
             {
                 case 3:
-                    WINDOW = new HanningWindow();
-                    break;
+                    return new HanningWindow();
                 case 2:
-                    WINDOW = new WelchWindow();
-                    break;
+                    return new WelchWindow();
                 case 1:
-                    WINDOW = new TriangleWindow();
-                    break;
+                    return new TriangleWindow();
                 case 0:
                 default:
-                    WINDOW = new RectangleWindow();
-                    break;
+                    return new RectangleWindow();
             }
         }
     }

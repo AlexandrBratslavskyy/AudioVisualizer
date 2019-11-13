@@ -16,9 +16,9 @@ namespace AudioVisualizer
     //Creation of filters
     public abstract class Filter
     {
-        
+        public Filter(long _N) { N = _N; }
         // calculations for filter
-        protected long fl1, fl2, fr1, fr2;
+        protected long fl1, fl2, fr1, fr2, N;
         public abstract void CreateFilter();
         //Filtering using convolution to the time domain
         //Convolution algorithm to create new samples
@@ -53,23 +53,20 @@ namespace AudioVisualizer
         public abstract void DropFilterLeft2();
         public abstract void DropFilterRight1();
         public abstract void DropFilterRight2();
+
         //statics
-        static public Filter FILTER = new FilterLowPass();
         static public S WEIGHTS;
-        static public void ChangeFilter(int newFilter)
+        static public Filter ChangeFilter(int newFilter, long N)
         {
             switch (newFilter)
             {
                 case 2:
-                    FILTER = new FilterBandPass();
-                    break;
+                    return new FilterBandPass(N);
                 case 1:
-                    FILTER = new FilterHighPass();
-                    break;
+                    return new FilterHighPass(N);
                 case 0:
                 default:
-                    FILTER = new FilterLowPass();
-                    break;
+                    return new FilterLowPass(N);
             }
         }
     }

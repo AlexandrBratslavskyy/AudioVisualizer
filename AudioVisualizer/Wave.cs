@@ -8,7 +8,7 @@ using System.IO;
 namespace AudioVisualizer
 {
     //Class that stores the wave file information
-    class Wave
+    public class Wave
     {
         //Default constructor
         public Wave() { }

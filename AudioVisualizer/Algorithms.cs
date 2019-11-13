@@ -9,10 +9,9 @@ namespace AudioVisualizer
     class Algorithms
     {
         //statics
-        static public A DFT(S s)
+        static public A DFT(S s, long N)
         {
             A a = new A();
-            long M = s.Size(), N = A.getN();
             for (long f = 0; f < N; ++f)
             {
                 // slow, needs threading

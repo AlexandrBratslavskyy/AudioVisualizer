@@ -8,14 +8,16 @@ namespace AudioVisualizer
 {
     public class S
     {
-        static public S ORIGINAL;
-        static public S WINDOWED;
-        static public S FILTERED;
         public S() { }
         public S(List<double> d)
         {
             for (long i = 0; i < d.Count; i++)
                 data.Add(d[(int)i]);
+        }
+        public S(Wave wav)
+        {
+            for (long i = 0; i < wav.data.Length; i++)
+                data.Add(wav.data[i]);
         }
         // Copy constructor.
         public S(S s)

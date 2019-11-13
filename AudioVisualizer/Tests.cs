@@ -11,7 +11,7 @@ namespace AudioVisualizer
         static public S SimpleCosineWave()
         {
             S s = new S();
-            long N = 12, A = 200, f = 5;
+            long N = 10000, A = 200, f = 5;
             for (long t=0; t< N; t++)
             {
                 s.Add((int)(A * Math.Cos(2 * Math.PI * f * t /N)));

@@ -13,6 +13,7 @@ namespace AudioVisualizer
 {
     public class FilterHighPass : Filter
     {
+        public FilterHighPass(long N) : base(N) { }
         /*
             create a high pass filter based on user selection
             user selects a frequency cutoff
@@ -43,7 +44,7 @@ namespace AudioVisualizer
             }
 
             //end of filter
-            for (; i < A.getN(); i++)
+            for (; i < N; i++)
             {
                 filter.Add(0, 0);
             }
@@ -63,7 +64,7 @@ namespace AudioVisualizer
             this.rect2 = rect2;
             this.canvas = canvas;
 
-            double width = canvas.ActualWidth, bin = width / A.getN();
+            double width = canvas.ActualWidth, bin = width / N;
 
             left1.Visibility = Visibility.Visible;
             left2.Visibility = Visibility.Collapsed;
@@ -86,7 +87,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterLeft1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= bin && pos <= width / 2)
             {
@@ -112,7 +113,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterRight1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= width / 2 + bin && pos <= width)
             {

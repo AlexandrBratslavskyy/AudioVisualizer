@@ -29,19 +29,6 @@ namespace AudioVisualizer
             return data.Count;
         }
         private List<Complex> data = new List<Complex>();
-
-        //statics
-        static public A COMPLEX;
-        static private long N = 12;
-        static public void SetN(long n)
-        {
-            if (n < 2 && n % 2 == 0)
-                N = n;
-        }
-        static public long getN()
-        {
-            return N;
-        }
     }
     //class for Complex numbers
     //has a real and imaginary portion

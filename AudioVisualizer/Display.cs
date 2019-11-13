@@ -30,7 +30,7 @@ namespace AudioVisualizer
         {
             ZOOM++;
         }
-        static public long DrawTimeDomain(Canvas canvas)
+        static public long DrawTimeDomain(Canvas canvas, S s)
         {
             //clear previous
             canvas.Children.Clear();
@@ -41,7 +41,7 @@ namespace AudioVisualizer
 
             zeroline.X1 = 0;
             zeroline.Y1 = Y;
-            zeroline.X2 = S.FILTERED.Size() - ZOOM;
+            zeroline.X2 = s.Size() - ZOOM;
             zeroline.Y2 = Y;
 
             zeroline.Stroke = new SolidColorBrush(Colors.Black);
@@ -51,15 +51,15 @@ namespace AudioVisualizer
 
             //compensate for limited space
             double c = 1.0;
-            if (Y < S.FILTERED.GetMax())
-                c = S.FILTERED.GetMax() / Y;
+            if (Y < s.GetMax())
+                c = s.GetMax() / Y;
 
             //display on canvas
             long i = 0;
-            for (long next = 0; next < S.FILTERED.Size() - ZOOM; i++)
+            for (long next = 0; next < s.Size() - ZOOM; i++)
             {
                 Line line = new Line();
-                double c1 = S.FILTERED.Get(next), c2 = S.FILTERED.Get(next += ZOOM);
+                double c1 = s.Get(next), c2 = s.Get(next += ZOOM);
 
                 line.X1 = i;
                 line.X2 = i;
@@ -73,16 +73,16 @@ namespace AudioVisualizer
             }
             return i;
         }
-        static public void DrawFrequencyDomain(Canvas canvas)
+        static public void DrawFrequencyDomain(Canvas canvas, A a, long N)
         {
             //clear previous
             canvas.Children.Clear();
 
             //line showing signal zero
-            double Y = canvas.ActualHeight, X = canvas.ActualWidth / A.getN();
+            double Y = canvas.ActualHeight, X = canvas.ActualWidth / N;
 
             //display filters
-            long i = 0, j = 1;
+            long i = 0;
             for (double l = 0; l < canvas.ActualWidth; l+=X)
             {
                 //display lines on canvas
@@ -97,16 +97,9 @@ namespace AudioVisualizer
                 line.StrokeThickness = 1.0;
 
                 //display values
-                double v = 0;
-                for (; i < j * A.COMPLEX.Size() / A.getN() && i < A.COMPLEX.Size(); i++)
-                {
-                    v += Math.Abs(A.COMPLEX.Get(i).getReal());
-                }
-                j++;
-
                 value.X1 = l + X / 2;
                 value.X2 = l + X / 2;
-                value.Y1 = Y - v;
+                value.Y1 = Y - Math.Abs(a.Get(i++).getReal());
                 value.Y2 = Y;
 
                 value.Stroke = new SolidColorBrush(Colors.Red);

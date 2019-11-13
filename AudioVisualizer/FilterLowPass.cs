@@ -13,6 +13,7 @@ namespace AudioVisualizer
 {
     public class FilterLowPass : Filter
     {
+        public FilterLowPass(long N) : base(N) { }
         /*
             create a low pass filter based on user selection
             user selects a frequency cutoff
@@ -43,7 +44,7 @@ namespace AudioVisualizer
             }
 
             //end of filter
-            for (; i < A.getN(); i++)
+            for (; i < N; i++)
             {
                 filter.Add(1, 1);
             }
@@ -63,7 +64,7 @@ namespace AudioVisualizer
             this.rect2 = rect2;
             this.canvas = canvas;
 
-            double width = canvas.ActualWidth, bin = width / A.getN();
+            double width = canvas.ActualWidth, bin = width / N;
 
             left1.Visibility = Visibility.Visible;
             left2.Visibility = Visibility.Collapsed;
@@ -78,8 +79,8 @@ namespace AudioVisualizer
 
             DrawRect();
 
-            fl1 = A.getN() / 2;
-            fr1 = A.getN() / 2 + 1;
+            fl1 = N / 2;
+            fr1 = N / 2 + 1;
 
             CreateFilter();
         }
@@ -92,7 +93,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterLeft1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= bin && pos <= width / 2)
             {
@@ -118,7 +119,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterRight1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= width / 2 + bin && pos <= width)
             {
@@ -144,9 +145,9 @@ namespace AudioVisualizer
         }
         public override void DropFilterLeft1()
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), binNumber = 1;
+            double width = canvas.ActualWidth, bin = width / N, binNumber = 1;
 
-            for (double i = binNumber, distance = width; i <= A.getN() / 2; ++i)
+            for (double i = binNumber, distance = width; i <= N / 2; ++i)
             {
                 if (Math.Abs(i * bin - Canvas.GetLeft(left1)) < distance)
                 {
@@ -161,7 +162,7 @@ namespace AudioVisualizer
             DrawRect();
 
             fl1 = (long)binNumber - 1;
-            fr1 = A.getN() - (long)binNumber;
+            fr1 = N - (long)binNumber;
 
             CreateFilter();
         }
@@ -171,9 +172,9 @@ namespace AudioVisualizer
         }
         public override void DropFilterRight1()
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), binNumber = A.getN() / 2 + 1;
+            double width = canvas.ActualWidth, bin = width / N, binNumber = N / 2 + 1;
 
-            for (double i = binNumber, distance = width; i <= A.getN(); ++i)
+            for (double i = binNumber, distance = width; i <= N; ++i)
             {
                 if (Math.Abs(i * bin - Canvas.GetLeft(right1)) < distance)
                 {

@@ -13,6 +13,7 @@ namespace AudioVisualizer
 {
     public class FilterBandPass : Filter
     {
+        public FilterBandPass(long N) : base(N) { }
         public override void CreateFilter()
         {
             A filter = new A();
@@ -44,7 +45,7 @@ namespace AudioVisualizer
             }
 
             //end of filter
-            for (; i < A.getN(); i++)
+            for (; i < N; i++)
             {
                 filter.Add(0, 0);
             }
@@ -63,7 +64,7 @@ namespace AudioVisualizer
             this.rect2 = rect2;
             this.canvas = canvas;
 
-            double width = canvas.ActualWidth, bin = width / A.getN();
+            double width = canvas.ActualWidth, bin = width / N;
 
             left1.Visibility = Visibility.Visible;
             left2.Visibility = Visibility.Visible;
@@ -90,7 +91,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterLeft1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= bin && pos <= Canvas.GetLeft(left2))
             {
@@ -113,7 +114,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterLeft2(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= Canvas.GetLeft(left1) && pos <= width / 2)
             {
@@ -135,7 +136,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterRight1(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= Canvas.GetLeft(right2) && pos <= width)
             {
@@ -157,7 +158,7 @@ namespace AudioVisualizer
         }
         public override void DragFilterRight2(DragDeltaEventArgs e)
         {
-            double width = canvas.ActualWidth, bin = width / A.getN(), pos = Mouse.GetPosition(canvas).X;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
             if (pos >= width / 2 + bin && pos <= Canvas.GetLeft(right1))
             {

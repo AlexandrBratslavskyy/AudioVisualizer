@@ -70,9 +70,6 @@
     <Compile Include="s.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Wave.cs" />
-    <Compile Include="WaveEditor.cs" />
-    <Compile Include="WaveFileReader.cs" />
-    <Compile Include="WaveFileWriter.cs" />
     <Compile Include="Win32.cs" />
     <Compile Include="Windowing.cs" />
     <Page Include="MainWindow.xaml">
