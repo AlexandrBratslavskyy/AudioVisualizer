@@ -13,7 +13,6 @@ namespace AudioVisualizer
 {
     public class FilterHighPass : Filter
     {
-        public FilterHighPass(long N) : base(N) { }
         /*
             create a high pass filter based on user selection
             user selects a frequency cutoff
@@ -54,8 +53,9 @@ namespace AudioVisualizer
         }
 
         //drawing and dragging
-        public override void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas)
+        public override void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, long N)
         {
+            this.N = N;
             this.left1 = left1;
             this.left2 = left2;
             this.right1 = right1;

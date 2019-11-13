@@ -31,7 +31,7 @@ namespace AudioVisualizer
         Wave WAVE;
 
         Windowing WINDOW = new RectangleWindow();
-        Filter FILTER = new FilterLowPass(N);
+        Filter FILTER = new FilterLowPass();
         //Start
         public MainWindow()
         {
@@ -72,7 +72,7 @@ namespace AudioVisualizer
         void CreateFilter()
         {
             //draw filter
-            FILTER.DrawFilter(left1, left2, right1, right2, rect1, rect2, FilterCanvas);
+            FILTER.DrawFilter(left1, left2, right1, right2, rect1, rect2, FilterCanvas, N);
             //convolution
             CreateFilterRange();
         }

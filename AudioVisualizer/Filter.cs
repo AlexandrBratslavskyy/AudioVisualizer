@@ -16,7 +16,6 @@ namespace AudioVisualizer
     //Creation of filters
     public abstract class Filter
     {
-        public Filter(long _N) { N = _N; }
         // calculations for filter
         protected long fl1, fl2, fr1, fr2, N;
         public abstract void CreateFilter();
@@ -43,7 +42,7 @@ namespace AudioVisualizer
         protected Thumb left1, left2, right1, right2;
         protected Rectangle rect1, rect2;
         protected Canvas canvas;
-        public abstract void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas);
+        public abstract void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, long N);
         protected abstract void DrawRect();
         public abstract void DragFilterLeft1(DragDeltaEventArgs e);
         public abstract void DragFilterLeft2(DragDeltaEventArgs e);
