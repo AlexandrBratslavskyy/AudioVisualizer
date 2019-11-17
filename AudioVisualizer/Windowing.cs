@@ -27,23 +27,6 @@ namespace AudioVisualizer
             }
             return NEWs;
         }
-
-        //statics
-        static public Windowing ChangeFilter(int newWindow)
-        {
-            switch (newWindow)
-            {
-                case 3:
-                    return new HanningWindow();
-                case 2:
-                    return new WelchWindow();
-                case 1:
-                    return new TriangleWindow();
-                case 0:
-                default:
-                    return new RectangleWindow();
-            }
-        }
     }
     public class RectangleWindow : Windowing
     {

@@ -21,22 +21,22 @@ namespace AudioVisualizer
         public abstract void CreateFilter();
         //Filtering using convolution to the time domain
         //Convolution algorithm to create new samples
-        public S Convolution(S windowed)
+        public S Convolution(S OGs)
         {
-            S temp = new S(windowed);
-            temp.Convolution(WEIGHTS.Size());
+            S NEWs = new S(OGs);
+            NEWs.Convolution(WEIGHTS.Size());
 
-            for (long i = 0; i < windowed.Size(); i++)
+            for (long i = 0; i < OGs.Size(); i++)
             {
                 double sum = 0;
                 for (long j = 0; j < WEIGHTS.Size(); j++)
                 {
-                    sum += WEIGHTS.Get(j) * temp.Get(i + j);
+                    sum += WEIGHTS.Get(j) * NEWs.Get(i + j);
                 }
-                temp.Set(i, sum);
+                NEWs.Set(i, sum);
             }
 
-            return temp;
+            return NEWs;
         }
         // visual filter
         protected Thumb left1, left2, right1, right2;
@@ -55,18 +55,5 @@ namespace AudioVisualizer
 
         //statics
         static public S WEIGHTS;
-        static public Filter ChangeFilter(int newFilter, long N)
-        {
-            switch (newFilter)
-            {
-                case 2:
-                    return new FilterBandPass(N);
-                case 1:
-                    return new FilterHighPass(N);
-                case 0:
-                default:
-                    return new FilterLowPass(N);
-            }
-        }
     }
 }

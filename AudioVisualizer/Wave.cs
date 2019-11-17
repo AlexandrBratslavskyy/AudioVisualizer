@@ -26,7 +26,7 @@ namespace AudioVisualizer
             sampleRate = 11025;
             fmtAvgBPS = 22050;
             fmtBlockAlign = 2;
-            bitDepth = 16;
+            bitsPerSample = 16;
             dataID = System.Text.Encoding.ASCII.GetBytes("data");
             dataSize = (uint)signalData.Length;
 
@@ -43,7 +43,7 @@ namespace AudioVisualizer
         public uint sampleRate;
         public uint fmtAvgBPS;
         public ushort fmtBlockAlign;
-        public ushort bitDepth;
+        public ushort bitsPerSample;
         public byte[] dataID;
         public uint dataSize;
 
@@ -66,7 +66,7 @@ namespace AudioVisualizer
             sampleRate = br.ReadUInt32();
             fmtAvgBPS = br.ReadUInt32();
             fmtBlockAlign = br.ReadUInt16();
-            bitDepth = br.ReadUInt16();
+            bitsPerSample = br.ReadUInt16();
             dataID = br.ReadBytes(4);
             dataSize = br.ReadUInt32();
 
@@ -98,7 +98,7 @@ namespace AudioVisualizer
             bw.Write(sampleRate);
             bw.Write(fmtAvgBPS);
             bw.Write(fmtBlockAlign);
-            bw.Write(bitDepth);
+            bw.Write(bitsPerSample);
             bw.Write(dataID);
             bw.Write(dataSize);
             bw.Write(data);

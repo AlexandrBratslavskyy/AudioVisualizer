@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioVisualizer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1200">
+        Title="MainWindow" Height="450" Width="1200"
+        Closing="MainWindowClose">
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -89,7 +90,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Button Grid.Row="0" Height="20" Click="record">record</Button>
+                            <Button Grid.Row="0" Height="20" Click="startrecord">record</Button>
 
                             <Button Grid.Row="1" Height="20" Click="stoprecord">stop record</Button>
 

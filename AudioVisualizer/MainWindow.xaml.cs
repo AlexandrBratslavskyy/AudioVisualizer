@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace AudioVisualizer
 {
@@ -36,33 +37,32 @@ namespace AudioVisualizer
         public MainWindow()
         {
             InitializeComponent();
+            Win32.OpenDialog();
         }
+        public void MainWindowClose(object sender, CancelEventArgs e)
+        {
+            Win32.CloseDialog();
+        }
+
         //New signal added
         void CreateSignal()
         {
             //save original
             ORIGINAL = new S(WAVE);
-            //windowing
-            CreateWindow();
+            ///freq domain
+            CreateComplex();
         }
         void CreateSignal(S s)
         {
             //save original
             ORIGINAL = s;
-            //windowing
-            CreateWindow();
-        }
-        void CreateWindow()
-        {
-            //windowing
-            WINDOWED = WINDOW.CreateWindow(ORIGINAL, N);
             //freq domain
             CreateComplex();
         }
         void CreateComplex()
         {
             //dft
-            COMPLEX = Algorithms.DFT(WINDOWED, N);
+            COMPLEX = Algorithms.DFT(ORIGINAL, N);
             //display freq domain
             DisplayFrequencyDomain();
             //draw filter
@@ -79,13 +79,20 @@ namespace AudioVisualizer
         void CreateFilterRange()
         {
             //convolution
-            FILTERED = WINDOWED; //FILTER.Convolution(WINDOWED)   //showing wrong output
+            FILTERED = FILTER.Convolution(ORIGINAL);   //showing wrong output
+            //windowing
+            CreateWindow();
+        }
+        void CreateWindow()
+        {
+            //windowing
+            WINDOWED = WINDOW.CreateWindow(ORIGINAL, N); //WINDOW.CreateWindow(FILTERED, N);
             //display time domain
             DisplayTimeDomain();
         }
         void DisplayTimeDomain()
         {
-            TimeDomain.Width = Display.DrawTimeDomain(TimeDomain, WINDOWED);
+            TimeDomain.Width = Display.DrawTimeDomain(TimeDomain, ORIGINAL);
         }
         void DisplayFrequencyDomain()
         {
@@ -137,28 +144,28 @@ namespace AudioVisualizer
         //windowing
         void rectangle(object sender, RoutedEventArgs e)
         {
-            WINDOW = Windowing.ChangeFilter(0);
+            WINDOW = new RectangleWindow();
             if (ORIGINAL == null)
                 return;
             CreateWindow();
         }
         void triangle(object sender, RoutedEventArgs e)
         {
-            WINDOW = Windowing.ChangeFilter(1);
+            WINDOW = new TriangleWindow();
             if (ORIGINAL == null)
                 return;
             CreateWindow();
         }
         void welch(object sender, RoutedEventArgs e)
         {
-            WINDOW = Windowing.ChangeFilter(2);
+            WINDOW = new WelchWindow();
             if (ORIGINAL == null)
                 return;
             CreateWindow();
         }
         void hanning(object sender, RoutedEventArgs e)
         {
-            WINDOW = Windowing.ChangeFilter(3);
+            WINDOW = new HanningWindow();
             if (ORIGINAL == null)
                 return;
             CreateWindow();
@@ -167,42 +174,43 @@ namespace AudioVisualizer
         //filtering
         void low(object sender, RoutedEventArgs e)
         {
-            FILTER = Filter.ChangeFilter(0, N);
+            FILTER = new FilterLowPass();
             if (ORIGINAL == null)
                 return;
             CreateFilter();
         }
         void high(object sender, RoutedEventArgs e)
         {
-            FILTER = Filter.ChangeFilter(1, N);
+            FILTER = new FilterHighPass();
             if (ORIGINAL == null)
                 return;
             CreateFilter();
         }
         void band(object sender, RoutedEventArgs e)
         {
-            FILTER = Filter.ChangeFilter(2, N);
+            FILTER = new FilterBandPass();
             if (ORIGINAL == null)
                 return;
             CreateFilter();
         }
 
         //record
-        void record(object sender, RoutedEventArgs e)
+        void startrecord(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't connect to dll", "TODO");
+            Win32.StartRecord();
         }
         void stoprecord(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't connect to dll", "TODO");
+            WAVE = Win32.StopRecord();
+            CreateSignal();
         }
         void play(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't connect to dll", "TODO");
+            Win32.StartPlay(WAVE);
         }
         void stopplay(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't connect to dll", "TODO");
+            Win32.StopPlay();
         }
 
         //editing
