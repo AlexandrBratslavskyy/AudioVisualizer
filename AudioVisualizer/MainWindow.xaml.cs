@@ -33,6 +33,7 @@ namespace AudioVisualizer
 
         Windowing WINDOW = new RectangleWindow();
         Filter FILTER = new FilterLowPass();
+        Editor EDITOR;
         //Start
         public MainWindow()
         {
@@ -41,7 +42,7 @@ namespace AudioVisualizer
         }
         public void MainWindowClose(object sender, CancelEventArgs e)
         {
-            Win32.CloseDialog();
+            //Win32.CloseDialog();
         }
 
         //New signal added
@@ -49,13 +50,23 @@ namespace AudioVisualizer
         {
             //save original
             ORIGINAL = new S(WAVE);
-            ///freq domain
+            //enable all
+            btnsave.IsEnabled = true;
+            btnplay.IsEnabled = true;
+            btncut.IsEnabled = true;
+            btncopy.IsEnabled = true;
+            //freq domain
             CreateComplex();
         }
         void CreateSignal(S s)
         {
             //save original
             ORIGINAL = s;
+            //enable all
+            btnsave.IsEnabled = true;
+            btnplay.IsEnabled = true;
+            btncut.IsEnabled = true;
+            btncopy.IsEnabled = true;
             //freq domain
             CreateComplex();
         }
@@ -198,33 +209,90 @@ namespace AudioVisualizer
         void startrecord(object sender, RoutedEventArgs e)
         {
             Win32.StartRecord();
+            btnstartrecord.IsEnabled = false;
+            btnstoprecord.IsEnabled = true;
         }
         void stoprecord(object sender, RoutedEventArgs e)
         {
+            btnstartrecord.IsEnabled = true;
+            btnstoprecord.IsEnabled = false;
             WAVE = Win32.StopRecord();
             CreateSignal();
         }
         void play(object sender, RoutedEventArgs e)
         {
             Win32.StartPlay(WAVE);
+            btnplay.IsEnabled = false;
+            btnstopplay.IsEnabled = true;
         }
         void stopplay(object sender, RoutedEventArgs e)
         {
             Win32.StopPlay();
+            btnplay.IsEnabled = true;
+            btnstopplay.IsEnabled = false;
         }
 
         //editing
+        bool ect = false;
+        bool ecp = false;
+        bool ept = false;
         void cut(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't cut", "TODO");
+            if (!ect)
+            {
+                EDITOR = new EditorCut();
+                EDITOR.DrawEditor(left, right, rect, EditCanvas, Edit);
+
+                ect = true;
+                ecp = false;
+                ept = false;
+            }
+            else
+            {
+                EDITOR.EraseEditor();
+                ect = false;
+                ecp = false;
+                ept = false;
+            }
+            
         }
         void copy(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't copy", "TODO");
+            if (!ecp)
+            {
+                EDITOR = new EditorCopy();
+                EDITOR.DrawEditor(left, right, rect, EditCanvas, Edit);
+
+                ect = false;
+                ecp = true;
+                ept = false;
+            }
+            else
+            {
+                EDITOR.EraseEditor();
+                ect = false;
+                ecp = false;
+                ept = false;
+            }
         }
         void paste(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Can't paste", "TODO");
+            if (!ept)
+            {
+                EDITOR = new EditorPaste();
+                EDITOR.DrawEditor(left, right, rect, EditCanvas, Edit);
+
+                ect = false;
+                ecp = false;
+                ept = true;
+            }
+            else
+            {
+                EDITOR.EraseEditor();
+                ect = false;
+                ecp = false;
+                ept = false;
+            }
         }
 
         //zooming
@@ -281,6 +349,21 @@ namespace AudioVisualizer
         {
             FILTER.DropFilterRight2();
             CreateFilterRange();
+        }
+
+        public void drageditorleft(object sender, DragDeltaEventArgs e)
+        {
+            EDITOR.DragEditorLeft(e);
+        }
+        public void drageditorright(object sender, DragDeltaEventArgs e)
+        {
+            EDITOR.DragEditorRight(e);
+        }
+        void edit(object sender, RoutedEventArgs e)
+        {
+            EDITOR.Edit(ORIGINAL, scroll);
+            btnpaste.IsEnabled = Editor.isCP();
+            CreateSignal(ORIGINAL);
         }
     }
 }

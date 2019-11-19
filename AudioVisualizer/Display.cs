@@ -24,11 +24,15 @@ namespace AudioVisualizer
         static public void ZoomIn()
         {
             if (ZOOM != 1)
-                ZOOM--;
+                --ZOOM;
         }
         static public void ZoomOut()
         {
-            ZOOM++;
+            ++ZOOM;
+        }
+        static public long Get()
+        {
+            return ZOOM;
         }
         static public long DrawTimeDomain(Canvas canvas, S s)
         {

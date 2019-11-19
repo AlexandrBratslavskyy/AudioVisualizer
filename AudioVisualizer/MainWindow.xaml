@@ -46,7 +46,7 @@
 
                             <Button Grid.Row="1" Height="20" Click="test">test</Button>
 
-                            <Button Grid.Row="2" Height="20" Click="save">save</Button>
+                            <Button Grid.Row="2" Height="20" Click="save" IsEnabled="False" Name="btnsave">save</Button>
                         </Grid>
                     </Border>
 
@@ -90,13 +90,13 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Button Grid.Row="0" Height="20" Click="startrecord">record</Button>
+                            <Button Grid.Row="0" Height="20" Click="startrecord" Name="btnstartrecord">record</Button>
 
-                            <Button Grid.Row="1" Height="20" Click="stoprecord">stop record</Button>
+                            <Button Grid.Row="1" Height="20" Click="stoprecord" IsEnabled="False" Name="btnstoprecord">stop record</Button>
 
-                            <Button Grid.Row="2" Height="20" Click="play">play</Button>
+                            <Button Grid.Row="2" Height="20" Click="play" IsEnabled="False" Name="btnplay">play</Button>
 
-                            <Button Grid.Row="3" Height="20" Click="stopplay">stop play</Button>
+                            <Button Grid.Row="3" Height="20" Click="stopplay" IsEnabled="False" Name="btnstopplay">stop play</Button>
                         </Grid>
                     </Border>
 
@@ -110,11 +110,11 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Button Grid.Row="0" Height="20" Click="cut">cut</Button>
+                            <Button Grid.Row="0" Height="20" Click="cut" IsEnabled="False" Name="btncut">cut</Button>
 
-                            <Button Grid.Row="1" Height="20" Click="copy">copy</Button>
+                            <Button Grid.Row="1" Height="20" Click="copy" IsEnabled="False" Name="btncopy">copy</Button>
 
-                            <Button Grid.Row="2" Height="20" Click="paste">paste</Button>
+                            <Button Grid.Row="2" Height="20" Click="paste" IsEnabled="False" Name="btnpaste">paste</Button>
 
                         </Grid>
                     </Border>
@@ -140,13 +140,37 @@
         </Border>
 
         <Border Grid.Column="1" Name="TimeDomainContainer" BorderBrush="Black" BorderThickness="1">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Name="scroll">
                 <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
                     <Canvas Name="TimeDomain" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="{Binding Path=ActualHeight, ElementName=TimeDomainContainer}" />
                 </StackPanel>
             </ScrollViewer>
         </Border>
+        
+        <Canvas Grid.Column="1" Name="EditCanvas">
 
+            <Rectangle Name="rect" Canvas.Left="0" Canvas.Top="0" Width="0" Height="{Binding Path=ActualHeight, ElementName=FilterCanvas}" Fill="Green" Opacity="0.2" Visibility="Collapsed" />
+
+            <Thumb Name="left" DragDelta="drageditorleft" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
+                <Thumb.Template>
+                    <ControlTemplate>
+                        <Line X1="0" X2="0" Y1="0" Y2="{Binding Path=ActualHeight, ElementName=FilterCanvas}" StrokeThickness="4" Stroke="Green"/>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+
+            <Thumb Name="right" DragDelta="drageditorright" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
+                <Thumb.Template>
+                    <ControlTemplate>
+                        <Line X1="0" X2="0" Y1="0" Y2="{Binding Path=ActualHeight, ElementName=FilterCanvas}" StrokeThickness="4" Stroke="Green"/>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+
+            <Button Name="Edit" Click="edit" Visibility="Collapsed" Canvas.Right="10" Canvas.Top="10"></Button>
+            
+        </Canvas>
+        
         <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1">
             <Canvas Name="FrequencyDomain" />
         </Border>

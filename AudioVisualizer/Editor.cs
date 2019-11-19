@@ -3,25 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Shapes;
 
 namespace AudioVisualizer
 {
     // to display cut copy paste options
     // real cut copy pasting in s.cs
-    class Editor
+    public abstract class Editor
     {
-        public void copy()
-        {
-            
-        }
-        public void cut()
-        {
-            
-        }
+        public abstract void Edit(S s, ScrollViewer scroll);
 
-        public void paste()
+        protected Thumb left, right;
+        protected Rectangle rect;
+        protected Canvas canvas;
+        protected Button btn;
+        public abstract void DrawEditor(Thumb left, Thumb right, Rectangle rect, Canvas canvas, Button btn);
+        public void EraseEditor()
         {
-            
+            left.Visibility = Visibility.Collapsed;
+            right.Visibility = Visibility.Collapsed;
+
+            rect.Visibility = Visibility.Collapsed;
+
+            btn.Visibility = Visibility.Collapsed;
+        }
+        protected void DrawRect()
+        {
+            rect.Width = Canvas.GetLeft(right) - Canvas.GetLeft(left);
+
+            Canvas.SetLeft(rect, Canvas.GetLeft(left));
+        }
+        public abstract void DragEditorLeft(DragDeltaEventArgs e);
+        public abstract void DragEditorRight(DragDeltaEventArgs e);
+        //statics
+        static protected S CP;
+        static public bool isCP()
+        {
+            return CP != null;
         }
     }
+    
 }
