@@ -36,6 +36,8 @@ namespace AudioVisualizer
                 NEWs.Set(i, sum);
             }
 
+            NEWs.DeConvolution(WEIGHTS.Size());
+
             return NEWs;
         }
         // visual filter

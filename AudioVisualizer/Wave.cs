@@ -12,7 +12,27 @@ namespace AudioVisualizer
     {
         //Default constructor
         public Wave() { }
+        //Play constroctor
+        public Wave(Wave w, S s)
+        {
+            byte[] signalData = s.GetByte();
 
+            chunkID = w.chunkID;
+            fileSize = 36 + (uint)signalData.Length;
+            riffType = w.riffType;
+            fmtID = w.fmtID;
+            fmtSize = w.fmtSize;
+            fmtCode = w.fmtCode;
+            channels = w.channels;
+            sampleRate = w.sampleRate;
+            fmtAvgBPS = w.fmtAvgBPS;
+            fmtBlockAlign = w.fmtBlockAlign;
+            bitsPerSample = w.bitsPerSample;
+            dataID = w.dataID;
+            dataSize = (uint)signalData.Length;
+
+            data = signalData;
+        }
         //Constructor when recording
         public Wave(byte[] signalData)
         {

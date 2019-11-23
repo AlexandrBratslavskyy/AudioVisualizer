@@ -36,7 +36,7 @@ namespace AudioVisualizer
                 {
                     samples += a.Get(f).getReal() * Math.Cos(2 * Math.PI * t * f / N) - a.Get(f).getImm() * Math.Sin(2 * Math.PI * t * f / N);
                 }
-                s.Add((long)samples);
+                s.Add(samples / N);
             }
             return s;
         }

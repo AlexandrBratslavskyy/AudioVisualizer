@@ -39,24 +39,8 @@ namespace AudioVisualizer
             //clear previous
             canvas.Children.Clear();
 
-            //line showing signal zero
-            double Y = canvas.ActualHeight / 2;
-            Line zeroline = new Line();
-
-            zeroline.X1 = 0;
-            zeroline.Y1 = Y;
-            zeroline.X2 = s.Size() - ZOOM;
-            zeroline.Y2 = Y;
-
-            zeroline.Stroke = new SolidColorBrush(Colors.Black);
-            zeroline.StrokeThickness = 1.0;
-
-            canvas.Children.Add(zeroline);
-
-            //compensate for limited space
-            double c = 1.0;
-            if (Y < s.GetMax())
-                c = s.GetMax() / Y;
+            //over scrollbar                        //compensate for limited space, only shows positives
+            double Y = canvas.ActualHeight * 0.945, max = (Math.Abs(s.GetMax()) + Math.Abs(s.GetMin())) / Y;
 
             //display on canvas
             long i = 0;
@@ -67,8 +51,8 @@ namespace AudioVisualizer
 
                 line.X1 = i;
                 line.X2 = i;
-                line.Y1 = c * (Y - c1);
-                line.Y2 = c * (Y - c2);
+                line.Y1 = Y - c1 / max;
+                line.Y2 = Y - c2 / max;
 
                 line.Stroke = new SolidColorBrush(Colors.Blue);
                 line.StrokeThickness = 1.0;

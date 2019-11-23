@@ -30,8 +30,10 @@ namespace AudioVisualizer
             return new Wave(data);
         }
 
-        static public void StartPlay(Wave w)
+        static public void StartPlay(Wave wave, S s)
         {
+            Wave w = new Wave(wave, s);
+
             IntPtr intptr = Marshal.AllocHGlobal(w.data.Length);
             Marshal.Copy(w.data, 0, intptr, w.data.Length);
 

@@ -37,7 +37,7 @@ namespace AudioVisualizer
             }
 
             //middle of filter
-            for (; i <= fr1; i++)
+            for (; i <= fr1 && i < N; i++)
             {
                 filter.Add(0, 0);
             }
@@ -71,15 +71,15 @@ namespace AudioVisualizer
             right1.Visibility = Visibility.Visible;
             right2.Visibility = Visibility.Collapsed;
 
-            Canvas.SetLeft(left1, width / 2);
-            Canvas.SetLeft(right1, width / 2 + bin);
+            Canvas.SetLeft(left1, width / 2 + bin / 2);
+            Canvas.SetLeft(right1, width / 2 + bin / 2);
 
             rect1.Visibility = Visibility.Visible;
             rect2.Visibility = Visibility.Visible;
 
             DrawRect();
 
-            fl1 = N / 2;
+            fl1 = N / 2 + 1;
             fr1 = N / 2 + 1;
 
             CreateFilter();
@@ -95,19 +95,24 @@ namespace AudioVisualizer
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
-            if (pos >= bin && pos <= width / 2)
+            if (pos >= bin && pos <= width / 2 + bin / 2)
             {
                 Canvas.SetLeft(left1, Canvas.GetLeft(left1) + e.HorizontalChange);
                 Canvas.SetLeft(right1, width - Canvas.GetLeft(left1) + bin);
             }
-            else if (pos >= width / 2)
+            else if (pos >= width / 2 + bin / 2)
             {
-                Canvas.SetLeft(left1, width / 2);
-                Canvas.SetLeft(right1, width / 2 + bin);
+                Canvas.SetLeft(left1, width / 2 + bin / 2);
+                Canvas.SetLeft(right1, width / 2 + bin / 2);
+            }
+            else if (pos >= 0 && pos <= bin)
+            {
+                Canvas.SetLeft(left1, Canvas.GetLeft(left1) + e.HorizontalChange);
+                Canvas.SetLeft(right1, width);
             }
             else
             {
-                Canvas.SetLeft(left1, bin);
+                Canvas.SetLeft(left1, 0);
                 Canvas.SetLeft(right1, width);
             }
 
@@ -121,15 +126,15 @@ namespace AudioVisualizer
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
-            if (pos >= width / 2 + bin && pos <= width)
+            if (pos >= width / 2 + bin / 2 && pos <= width)
             {
                 Canvas.SetLeft(right1, Canvas.GetLeft(right1) + e.HorizontalChange);
                 Canvas.SetLeft(left1, width - Canvas.GetLeft(right1) + bin);
             }
-            else if (pos <= width / 2 + bin)
+            else if (pos <= width / 2 + bin / 2)
             {
-                Canvas.SetLeft(right1, width / 2 + bin);
-                Canvas.SetLeft(left1, width / 2);
+                Canvas.SetLeft(right1, width / 2 + bin / 2);
+                Canvas.SetLeft(left1, width / 2 + bin / 2);
             }
             else
             {
@@ -145,25 +150,39 @@ namespace AudioVisualizer
         }
         public override void DropFilterLeft1()
         {
-            double width = canvas.ActualWidth, bin = width / N, binNumber = 1;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
-            for (double i = binNumber, distance = width; i <= N / 2; ++i)
+            if(pos >= width / 2 + bin / 2)
             {
-                if (Math.Abs(i * bin - Canvas.GetLeft(left1)) < distance)
-                {
-                    distance = Math.Abs(i * bin - Canvas.GetLeft(left1));
-                    binNumber = i;
-                }
+                fl1 = N / 2 + 1;
+                fr1 = N / 2 + 1;
             }
+            else if (pos <= 0)
+            {
+                fl1 = 0;
+                fr1 = N;
+            }
+            else
+            {
+                long binNumber = 1;
 
-            Canvas.SetLeft(left1, binNumber * bin);
-            Canvas.SetLeft(right1, width - Canvas.GetLeft(left1) + bin);
+                for (double i = binNumber, distance = width; i <= N / 2; ++i)
+                {
+                    if (Math.Abs(i * bin - Canvas.GetLeft(left1)) < distance)
+                    {
+                        distance = Math.Abs(i * bin - Canvas.GetLeft(left1));
+                        binNumber = (long)i;
+                    }
+                }
 
-            DrawRect();
+                Canvas.SetLeft(left1, binNumber * bin);
+                Canvas.SetLeft(right1, width - Canvas.GetLeft(left1) + bin);
 
-            fl1 = (long)binNumber - 1;
-            fr1 = N - (long)binNumber;
+                DrawRect();
 
+                fl1 = binNumber - 1;
+                fr1 = N - binNumber;
+            }
             CreateFilter();
         }
         public override void DropFilterLeft2()
@@ -172,21 +191,35 @@ namespace AudioVisualizer
         }
         public override void DropFilterRight1()
         {
-            double width = canvas.ActualWidth, bin = width / N, binNumber = N / 2 + 1;
+            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
-            for (double i = binNumber, distance = width; i <= N; ++i)
+            if (pos <= width / 2 + bin / 2)
             {
-                if (Math.Abs(i * bin - Canvas.GetLeft(right1)) < distance)
-                {
-                    distance = Math.Abs(i * bin - Canvas.GetLeft(right1));
-                    binNumber = i;
-                }
+                fl1 = N / 2 + 1;
+                fr1 = N / 2 + 1;
             }
+            else
+            {
+                long binNumber = N / 2 + 1;
 
-            Canvas.SetLeft(right1, binNumber * bin);
-            Canvas.SetLeft(left1, width - Canvas.GetLeft(right1) + bin);
+                for (double i = binNumber, distance = width; i <= N; ++i)
+                {
+                    if (Math.Abs(i * bin - Canvas.GetLeft(right1)) < distance)
+                    {
+                        distance = Math.Abs(i * bin - Canvas.GetLeft(right1));
+                        binNumber = (long)i;
+                    }
+                }
 
-            this.DrawRect();
+                Canvas.SetLeft(right1, binNumber * bin);
+                Canvas.SetLeft(left1, width - Canvas.GetLeft(right1) + bin);
+
+                this.DrawRect();
+
+                fl1 = N - binNumber;
+                fr1 = binNumber - 1;
+            }
+            CreateFilter();
         }
         public override void DropFilterRight2()
         {

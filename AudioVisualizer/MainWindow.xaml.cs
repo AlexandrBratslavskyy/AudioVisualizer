@@ -25,9 +25,7 @@ namespace AudioVisualizer
         static long N = 12;
         A COMPLEX;
 
-        S ORIGINAL;
-        S WINDOWED;
-        S FILTERED;
+        S ORIGINAL, FILTERED, WINDOWED;
 
         Wave WAVE;
 
@@ -97,13 +95,13 @@ namespace AudioVisualizer
         void CreateWindow()
         {
             //windowing
-            WINDOWED = WINDOW.CreateWindow(ORIGINAL, N); //WINDOW.CreateWindow(FILTERED, N);
+            WINDOWED = WINDOW.CreateWindow(FILTERED, N); //WINDOW.CreateWindow(FILTERED, N);
             //display time domain
             DisplayTimeDomain();
         }
         void DisplayTimeDomain()
         {
-            TimeDomain.Width = Display.DrawTimeDomain(TimeDomain, ORIGINAL);
+            TimeDomain.Width = Display.DrawTimeDomain(TimeDomain, WINDOWED);
         }
         void DisplayFrequencyDomain()
         {
@@ -148,8 +146,10 @@ namespace AudioVisualizer
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "(*.wav)|*.wav";
             if (saveFileDialog.ShowDialog() == true)
-                WAVE.Write(File.Create(saveFileDialog.FileName));
-            //MessageBox.Show("Can't save wav files", "TODO");
+            {
+                Wave w = new Wave(WAVE, WINDOWED);
+                w.Write(File.Create(saveFileDialog.FileName));
+            }
         }
 
         //windowing
@@ -211,6 +211,7 @@ namespace AudioVisualizer
             Win32.StartRecord();
             btnstartrecord.IsEnabled = false;
             btnstoprecord.IsEnabled = true;
+            btnplay.IsEnabled = false;
         }
         void stoprecord(object sender, RoutedEventArgs e)
         {
@@ -221,7 +222,7 @@ namespace AudioVisualizer
         }
         void play(object sender, RoutedEventArgs e)
         {
-            Win32.StartPlay(WAVE);
+            Win32.StartPlay(WAVE, WINDOWED);
             btnplay.IsEnabled = false;
             btnstopplay.IsEnabled = true;
         }
@@ -350,7 +351,7 @@ namespace AudioVisualizer
             FILTER.DropFilterRight2();
             CreateFilterRange();
         }
-
+        //more drag
         public void drageditorleft(object sender, DragDeltaEventArgs e)
         {
             EDITOR.DragEditorLeft(e);

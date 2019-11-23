@@ -28,13 +28,20 @@ namespace AudioVisualizer
         public void Add(double val)
         {
             data.Add(val);
-            if (val > max || -1 * val > max)
+            if (val > max)
                 max = val;
+            else if (val < min)
+                min = val;
         }
         public void Convolution(long c)
         {
             for (int i = 0; i < c-1; i++)
                 Add(0);
+        }
+        public void DeConvolution(long c)
+        {
+            for (int i = 0; i < c - 1; i++)
+                data.RemoveAt(data.Count-1);
         }
         public void Set(long t, double val)
         {
@@ -48,9 +55,20 @@ namespace AudioVisualizer
         {
             return max;
         }
+        public double GetMin()
+        {
+            return min;
+        }
         public long Size()
         {
             return data.Count;
+        }
+        public byte[] GetByte()
+        {
+            byte[] b = new byte[data.Count];
+            for (int i = 0; i < data.Count; ++i)
+                b[i] = (byte)data[i];
+            return b;
         }
         public void Cut(int start, int end)
         {
@@ -67,5 +85,6 @@ namespace AudioVisualizer
         }
         private List<double> data = new List<double>();
         private double max = 0;
+        private double min = 0;
     }
 }
