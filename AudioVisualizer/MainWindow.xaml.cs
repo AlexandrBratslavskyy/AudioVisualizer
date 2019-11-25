@@ -154,6 +154,60 @@ namespace AudioVisualizer
             }
         }
 
+        //record
+        void startrecord(object sender, RoutedEventArgs e)
+        {
+            Win32.StartRecord(quantizationLevel, sampleRate);
+            btnstartrecord.IsEnabled = false;
+            btnstoprecord.IsEnabled = true;
+            btnplay.IsEnabled = false;
+        }
+        void stoprecord(object sender, RoutedEventArgs e)
+        {
+            btnstartrecord.IsEnabled = true;
+            btnstoprecord.IsEnabled = false;
+            WAVE = Win32.StopRecord(quantizationLevel, sampleRate);
+            CreateSignal();
+        }
+        void play(object sender, RoutedEventArgs e)
+        {
+            Win32.StartPlay(WAVE, WINDOWED);
+            btnplay.IsEnabled = false;
+            btnstopplay.IsEnabled = true;
+        }
+        void stopplay(object sender, RoutedEventArgs e)
+        {
+            Win32.StopPlay();
+            btnplay.IsEnabled = true;
+            btnstopplay.IsEnabled = false;
+        }
+
+        //sample rate
+        int sampleRate = 11025;
+        void SR11025(object sender, RoutedEventArgs e)
+        {
+            sampleRate = 11025;
+        }
+        void SR22050(object sender, RoutedEventArgs e)
+        {
+            sampleRate = 22050;
+        }
+        void SR44100(object sender, RoutedEventArgs e)
+        {
+            sampleRate = 44100;
+        }
+
+        //quan lvl
+        int quantizationLevel = 16;
+        void QL16(object sender, RoutedEventArgs e)
+        {
+            quantizationLevel = 16;
+        }
+        void QL32(object sender, RoutedEventArgs e)
+        {
+            quantizationLevel = 32;
+        }
+
         //windowing
         void rectangle(object sender, RoutedEventArgs e)
         {
@@ -205,34 +259,6 @@ namespace AudioVisualizer
             if (ORIGINAL == null)
                 return;
             CreateFilter();
-        }
-
-        //record
-        void startrecord(object sender, RoutedEventArgs e)
-        {
-            Win32.StartRecord();
-            btnstartrecord.IsEnabled = false;
-            btnstoprecord.IsEnabled = true;
-            btnplay.IsEnabled = false;
-        }
-        void stoprecord(object sender, RoutedEventArgs e)
-        {
-            btnstartrecord.IsEnabled = true;
-            btnstoprecord.IsEnabled = false;
-            WAVE = Win32.StopRecord();
-            CreateSignal();
-        }
-        void play(object sender, RoutedEventArgs e)
-        {
-            Win32.StartPlay(WAVE, WINDOWED);
-            btnplay.IsEnabled = false;
-            btnstopplay.IsEnabled = true;
-        }
-        void stopplay(object sender, RoutedEventArgs e)
-        {
-            Win32.StopPlay();
-            btnplay.IsEnabled = true;
-            btnstopplay.IsEnabled = false;
         }
 
         //editing

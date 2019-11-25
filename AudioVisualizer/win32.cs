@@ -14,20 +14,17 @@ namespace AudioVisualizer
 {
     class Win32
     {
-        static private int bitsPerSample = 16;
-        static private int sampleRate = 11025;
-
-        static public void StartRecord()
+        static public void StartRecord(int bitsPerSample, int sampleRate)
         {
             StartRec(bitsPerSample, sampleRate);
         }
-        static public Wave StopRecord()
+        static public Wave StopRecord(int bitsPerSample, int sampleRate)
         {
             RecordData rd = StopRec();
             byte[] data = new byte[rd.len];
             Marshal.Copy(rd.ip, data, 0, (int)rd.len);
 
-            return new Wave(data);
+            return new Wave(data, Convert.ToUInt16(bitsPerSample), Convert.ToUInt16(sampleRate));
         }
 
         static public void StartPlay(Wave wave, S s)

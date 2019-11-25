@@ -34,7 +34,7 @@ namespace AudioVisualizer
             data = signalData;
         }
         //Constructor when recording
-        public Wave(byte[] signalData)
+        public Wave(byte[] signalData, ushort bitsPerSample, ushort sampleRate)
         {
             chunkID = System.Text.Encoding.ASCII.GetBytes("RIFF");
             fileSize = 36 + (uint)signalData.Length;
@@ -43,10 +43,10 @@ namespace AudioVisualizer
             fmtSize = 16;
             fmtCode = 1;
             channels = 1;
-            sampleRate = 11025;
+            this.sampleRate = sampleRate;
             fmtAvgBPS = 22050;
             fmtBlockAlign = 2;
-            bitsPerSample = 16;
+            this.bitsPerSample = bitsPerSample;
             dataID = System.Text.Encoding.ASCII.GetBytes("data");
             dataSize = (uint)signalData.Length;
 
