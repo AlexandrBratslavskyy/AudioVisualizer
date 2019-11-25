@@ -13,32 +13,32 @@ namespace AudioVisualizer
 {
     public class FilterBandPass : Filter
     {
-        public override void CreateFilter()
+        protected override void CreateFilter()
         {
             A filter = new A();
 
             long i;
 
             //beginning of filter
-            for (i = 0; i <= fl1; i++)
+            for (i = 0; i < fl1; i++)
             {
                 filter.Add(0, 0);
             }
 
             //1st band
-            for (i = 0; i <= fl2; i++)
+            for (; i <= fl2; i++)
             {
                 filter.Add(1, 1);
             }
 
             //middle of filter
-            for (; i <= fr1; i++)
+            for (; i <= fr2; i++)
             {
                 filter.Add(0, 0);
             }
 
             //2nd band
-            for (; i <= fr2; i++)
+            for (; i <= fr1 && i < N; i++)
             {
                 filter.Add(1, 1);
             }
@@ -50,6 +50,7 @@ namespace AudioVisualizer
             }
 
             //return filter;
+            WEIGHTS = Algorithms.ReverseDFT(filter);
         }
 
         // drawing and dragging
@@ -71,20 +72,27 @@ namespace AudioVisualizer
             right1.Visibility = Visibility.Visible;
             right2.Visibility = Visibility.Visible;
 
-            Canvas.SetLeft(left1, bin);
-            Canvas.SetLeft(left2, width / 2);
-            Canvas.SetLeft(right2, width / 2 + bin);
+            Canvas.SetLeft(left1, 0);
+            Canvas.SetLeft(left2, width / 2 + bin / 2);
+            Canvas.SetLeft(right2, width / 2 + bin / 2);
             Canvas.SetLeft(right1, width);
 
             rect1.Visibility = Visibility.Visible;
             rect2.Visibility = Visibility.Visible;
 
-            this.DrawRect();
+            DrawRect();
+
+            fl1 = 0;
+            fl2 = N / 2 + 1;
+            fr2 = N / 2 + 1;
+            fr1 = N;
+
+            CreateFilter();
         }
         protected override void DrawRect()
         {
-            rect1.Width = Canvas.GetLeft(left2) - (int)Canvas.GetLeft(left1);
-            rect2.Width = Canvas.GetLeft(right1) - (int)Canvas.GetLeft(right2);
+            rect1.Width = Math.Abs(Canvas.GetLeft(left2) - Canvas.GetLeft(left1));
+            rect2.Width = Math.Abs(Canvas.GetLeft(right1) - Canvas.GetLeft(right2));
 
             Canvas.SetLeft(rect1, Canvas.GetLeft(left1));
             Canvas.SetLeft(rect2, Canvas.GetLeft(right2));
@@ -104,19 +112,24 @@ namespace AudioVisualizer
                 Canvas.SetLeft(right1, Canvas.GetLeft(right2));
                 
             }
+            else if (pos >= 0 && pos <= bin)
+            {
+                Canvas.SetLeft(left1, Canvas.GetLeft(left1) + e.HorizontalChange);
+                Canvas.SetLeft(right1, width);
+            }
             else
             {
-                Canvas.SetLeft(left1, bin);
+                Canvas.SetLeft(left1, 0);
                 Canvas.SetLeft(right1, width);
             }
 
-            this.DrawRect();
+            DrawRect();
         }
         public override void DragFilterLeft2(DragDeltaEventArgs e)
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
-            if (pos >= Canvas.GetLeft(left1) && pos <= width / 2)
+            if (pos >= bin && pos >= Canvas.GetLeft(left1) && pos <= width / 2 + bin / 2)
             {
                 Canvas.SetLeft(left2, Canvas.GetLeft(left2) + e.HorizontalChange);
                 Canvas.SetLeft(right2, width - Canvas.GetLeft(left2) + bin);
@@ -126,13 +139,18 @@ namespace AudioVisualizer
                 Canvas.SetLeft(left2, Canvas.GetLeft(left1));
                 Canvas.SetLeft(right2, Canvas.GetLeft(right1));
             }
+            else if (pos >= 0 && pos <= bin)
+            {
+                Canvas.SetLeft(left2, Canvas.GetLeft(left2) + e.HorizontalChange);
+                Canvas.SetLeft(right2, width);
+            }
             else
             {
-                Canvas.SetLeft(left2, width / 2);
-                Canvas.SetLeft(right2, width / 2 + bin);
+                Canvas.SetLeft(left2, width / 2 + bin / 2);
+                Canvas.SetLeft(right2, width / 2 + bin / 2);
             }
 
-            this.DrawRect();
+            DrawRect();
         }
         public override void DragFilterRight1(DragDeltaEventArgs e)
         {
@@ -154,13 +172,13 @@ namespace AudioVisualizer
                 Canvas.SetLeft(left1, bin);
             }
 
-            this.DrawRect();
+            DrawRect();
         }
         public override void DragFilterRight2(DragDeltaEventArgs e)
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
-            if (pos >= width / 2 + bin && pos <= Canvas.GetLeft(right1))
+            if (pos >= width / 2 + bin / 2 && pos <= Canvas.GetLeft(right1))
             {
                 Canvas.SetLeft(right2, Canvas.GetLeft(right2) + e.HorizontalChange);
                 Canvas.SetLeft(left2, width - Canvas.GetLeft(right2) + bin);
@@ -172,27 +190,11 @@ namespace AudioVisualizer
             }
             else
             {
-                Canvas.SetLeft(right2, width / 2 + bin);
-                Canvas.SetLeft(left2, width / 2);
+                Canvas.SetLeft(right2, width / 2 + bin / 2);
+                Canvas.SetLeft(left2, width / 2 + bin / 2);
             }
 
-            this.DrawRect();
-        }
-        public override void DropFilterLeft1()
-        {
-            throw new NotImplementedException("TODO");
-        }
-        public override void DropFilterLeft2()
-        {
-            throw new NotImplementedException("TODO");
-        }
-        public override void DropFilterRight1()
-        {
-            throw new NotImplementedException("TODO");
-        }
-        public override void DropFilterRight2()
-        {
-            throw new NotImplementedException("TODO");
+            DrawRect();
         }
     }
 }

@@ -18,13 +18,11 @@ namespace AudioVisualizer
             user selects a frequency cutoff
             all frequencies after freq cutoff are removed
 
-            freq = (f(frequency bins) * SamplingRate) / NumSamples
-
                                                       Nyquist
             [1, 1, 1, 1, 1, 1,            0, 0, 0, 0,    0,    0, 0, 0, 0, 1, 1, 1, 1, 1]
                             freq(cutoff) ---------------> <---------------
         */
-        public override void CreateFilter()
+        protected override void CreateFilter()
         {
             A filter = new A();
 
@@ -49,7 +47,7 @@ namespace AudioVisualizer
             }
 
             //return filter;
-            Filter.WEIGHTS = Algorithms.ReverseDFT(filter);
+            WEIGHTS = Algorithms.ReverseDFT(filter);
         }
 
         //drawing and dragging
@@ -89,6 +87,7 @@ namespace AudioVisualizer
             rect1.Width = Canvas.GetLeft(left1);
             rect2.Width = Canvas.GetLeft(left1);
 
+            Canvas.SetLeft(rect1, 0);
             Canvas.SetLeft(rect2, Canvas.GetLeft(right1));
         }
         public override void DragFilterLeft1(DragDeltaEventArgs e)
@@ -145,83 +144,6 @@ namespace AudioVisualizer
             DrawRect();
         }
         public override void DragFilterRight2(DragDeltaEventArgs e)
-        {
-            throw new NotImplementedException("Low Pass doesn't have second Thumb");
-        }
-        public override void DropFilterLeft1()
-        {
-            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
-
-            if(pos >= width / 2 + bin / 2)
-            {
-                fl1 = N / 2 + 1;
-                fr1 = N / 2 + 1;
-            }
-            else if (pos <= 0)
-            {
-                fl1 = 0;
-                fr1 = N;
-            }
-            else
-            {
-                long binNumber = 1;
-
-                for (double i = binNumber, distance = width; i <= N / 2; ++i)
-                {
-                    if (Math.Abs(i * bin - Canvas.GetLeft(left1)) < distance)
-                    {
-                        distance = Math.Abs(i * bin - Canvas.GetLeft(left1));
-                        binNumber = (long)i;
-                    }
-                }
-
-                Canvas.SetLeft(left1, binNumber * bin);
-                Canvas.SetLeft(right1, width - Canvas.GetLeft(left1) + bin);
-
-                DrawRect();
-
-                fl1 = binNumber - 1;
-                fr1 = N - binNumber;
-            }
-            CreateFilter();
-        }
-        public override void DropFilterLeft2()
-        {
-            throw new NotImplementedException("Low Pass doesn't have second Thumb");
-        }
-        public override void DropFilterRight1()
-        {
-            double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
-
-            if (pos <= width / 2 + bin / 2)
-            {
-                fl1 = N / 2 + 1;
-                fr1 = N / 2 + 1;
-            }
-            else
-            {
-                long binNumber = N / 2 + 1;
-
-                for (double i = binNumber, distance = width; i <= N; ++i)
-                {
-                    if (Math.Abs(i * bin - Canvas.GetLeft(right1)) < distance)
-                    {
-                        distance = Math.Abs(i * bin - Canvas.GetLeft(right1));
-                        binNumber = (long)i;
-                    }
-                }
-
-                Canvas.SetLeft(right1, binNumber * bin);
-                Canvas.SetLeft(left1, width - Canvas.GetLeft(right1) + bin);
-
-                this.DrawRect();
-
-                fl1 = N - binNumber;
-                fr1 = binNumber - 1;
-            }
-            CreateFilter();
-        }
-        public override void DropFilterRight2()
         {
             throw new NotImplementedException("Low Pass doesn't have second Thumb");
         }

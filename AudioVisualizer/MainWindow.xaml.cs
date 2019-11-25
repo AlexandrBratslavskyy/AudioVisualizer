@@ -124,6 +124,7 @@ namespace AudioVisualizer
             }
             //MessageBox.Show("Can't open wav files", "TODO");
         }
+        /*
         void test(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Simple Cosine wave: Yes\nComplex Cosine wave: No", "Test", MessageBoxButton.YesNoCancel);
@@ -139,6 +140,7 @@ namespace AudioVisualizer
                     break;
             }
         }
+        */
         void save(object sender, RoutedEventArgs e)
         {
             if (WAVE == null)

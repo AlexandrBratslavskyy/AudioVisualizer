@@ -25,7 +25,7 @@
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20" />
-                        <RowDefinition Height="120" />
+                        <RowDefinition Height="85" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="25" />
                         <RowDefinition Height="20" />
@@ -39,13 +39,12 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
                             <Button Grid.Row="0" Height="20" Click="browse">browse</Button>
 
-                            <Button Grid.Row="1" Height="20" Click="test">test</Button>
-
+                            <!--<Button Grid.Row="1" Height="20" Click="test">test</Button>
+                            -->
                             <Button Grid.Row="2" Height="20" Click="save" IsEnabled="False" Name="btnsave">save</Button>
                         </Grid>
                     </Border>
@@ -63,9 +62,9 @@
 
                     <ComboBox Grid.Row="5" Margin="10,2">
                         <ComboBoxItem PreviewMouseLeftButtonDown="low" IsSelected="True">Low Pass</ComboBoxItem>
-                        <!--<ComboBoxItem PreviewMouseLeftButtonDown="high">High Pass</ComboBoxItem>
+                        <ComboBoxItem PreviewMouseLeftButtonDown="high">High Pass</ComboBoxItem>
                         <ComboBoxItem PreviewMouseLeftButtonDown="band">Band Pass</ComboBoxItem>
-                    --></ComboBox>
+                    </ComboBox>
 
                 </Grid>
                 
@@ -180,14 +179,6 @@
             <Rectangle Name="rect1" Canvas.Left="0" Canvas.Top="0" Width="0" Height="{Binding Path=ActualHeight, ElementName=FilterCanvas}" Fill="Orange" Opacity="0.2" Visibility="Collapsed" />
             <Rectangle Name="rect2" Canvas.Left="0" Canvas.Top="0" Width="0" Height="{Binding Path=ActualHeight, ElementName=FilterCanvas}" Fill="Orange" Opacity="0.2" Visibility="Collapsed" />
 
-            <Thumb Name="left1" DragDelta="dragfilterleft1" DragCompleted="dropfilterleft1" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
-                <Thumb.Template>
-                    <ControlTemplate>
-                        <Line X1="0" X2="0" Y1="0" Y2="{Binding Path=ActualHeight, ElementName=FilterCanvas}" StrokeThickness="4" Stroke="Orange"/>
-                    </ControlTemplate>
-                </Thumb.Template>
-            </Thumb>
-
             <Thumb Name="left2" DragDelta="dragfilterleft2" DragCompleted="dropfilterleft2" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
                 <Thumb.Template>
                     <ControlTemplate>
@@ -196,7 +187,7 @@
                 </Thumb.Template>
             </Thumb>
 
-            <Thumb Name="right1" DragDelta="dragfilterright1" DragCompleted="dropfilterright1" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
+            <Thumb Name="left1" DragDelta="dragfilterleft1" DragCompleted="dropfilterleft1" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
                 <Thumb.Template>
                     <ControlTemplate>
                         <Line X1="0" X2="0" Y1="0" Y2="{Binding Path=ActualHeight, ElementName=FilterCanvas}" StrokeThickness="4" Stroke="Orange"/>
@@ -205,6 +196,14 @@
             </Thumb>
 
             <Thumb Name="right2" DragDelta="dragfilterright2" DragCompleted="dropfilterright2" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
+                <Thumb.Template>
+                    <ControlTemplate>
+                        <Line X1="0" X2="0" Y1="0" Y2="{Binding Path=ActualHeight, ElementName=FilterCanvas}" StrokeThickness="4" Stroke="Orange"/>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+
+            <Thumb Name="right1" DragDelta="dragfilterright1" DragCompleted="dropfilterright1" Canvas.Left="0" Canvas.Top="0" Visibility="Collapsed">
                 <Thumb.Template>
                     <ControlTemplate>
                         <Line X1="0" X2="0" Y1="0" Y2="{Binding Path=ActualHeight, ElementName=FilterCanvas}" StrokeThickness="4" Stroke="Orange"/>
