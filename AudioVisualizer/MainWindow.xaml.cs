@@ -1,26 +1,15 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.ComponentModel;
+using System.Windows.Threading;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AudioVisualizer
 {
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : Window
     {
         static long N = 12;
         A COMPLEX;
@@ -53,8 +42,8 @@ namespace AudioVisualizer
             btnplay.IsEnabled = true;
             btncut.IsEnabled = true;
             btncopy.IsEnabled = true;
-            //freq domain
-            CreateComplex();
+
+            CreateDivergentPaths();
         }
         void CreateSignal(S s)
         {
@@ -65,8 +54,16 @@ namespace AudioVisualizer
             btnplay.IsEnabled = true;
             btncut.IsEnabled = true;
             btncopy.IsEnabled = true;
+
+            CreateDivergentPaths();
+        }
+        void CreateDivergentPaths()
+        {
             //freq domain
-            CreateComplex();
+            Task c = Task.Run(CreateComplex);
+            //draw filter
+            Task f = Task.Run(CreateFilter);
+            Task.WaitAll(c, f);
         }
         void CreateComplex()
         {
@@ -74,38 +71,41 @@ namespace AudioVisualizer
             COMPLEX = Algorithms.DFT(ORIGINAL, N);
             //display freq domain
             DisplayFrequencyDomain();
-            //draw filter
-            CreateFilter();
         }
         //
         void CreateFilter()
         {
-            //draw filter
-            FILTER.DrawFilter(left1, left2, right1, right2, rect1, rect2, FilterCanvas, N);
-            //convolution
-            CreateFilterRange();
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+            {
+                //draw filter
+                FILTER.DrawFilter(left1, left2, right1, right2, rect1, rect2, FilterCanvas, N);
+                //convolution
+                CreateFilterRange();
+            });
         }
         void CreateFilterRange()
         {
             //convolution
-            FILTERED = FILTER.Convolution(ORIGINAL);   //showing wrong output
+            FILTERED = FILTER.Convolution(ORIGINAL);
             //windowing
             CreateWindow();
         }
         void CreateWindow()
         {
             //windowing
-            WINDOWED = WINDOW.CreateWindow(FILTERED, N); //WINDOW.CreateWindow(FILTERED, N);
+            WINDOWED = WINDOW.CreateWindow(FILTERED, N);
             //display time domain
             DisplayTimeDomain();
         }
         void DisplayTimeDomain()
         {
-            TimeDomain.Width = Display.DrawTimeDomain(TimeDomain, WINDOWED);
+            Display.DrawTimeDomain(TimeDomain, WINDOWED);
         }
         void DisplayFrequencyDomain()
         {
-            Display.DrawFrequencyDomain(FrequencyDomain, COMPLEX, N);
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () {
+                Display.DrawFrequencyDomain(FrequencyDomain, COMPLEX, N);
+            });
         }
 
         /*
@@ -124,23 +124,6 @@ namespace AudioVisualizer
             }
             //MessageBox.Show("Can't open wav files", "TODO");
         }
-        /*
-        void test(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Simple Cosine wave: Yes\nComplex Cosine wave: No", "Test", MessageBoxButton.YesNoCancel);
-            switch (result)
-            {
-                case MessageBoxResult.Yes:
-                    CreateSignal(Tests.SimpleCosineWave());
-                    break;
-                case MessageBoxResult.No:
-                    CreateSignal(Tests.ComplexCosineWave());
-                    break;
-                case MessageBoxResult.Cancel:
-                    break;
-            }
-        }
-        */
         void save(object sender, RoutedEventArgs e)
         {
             if (WAVE == null)

@@ -71,7 +71,6 @@
     <Compile Include="FilterHighPass.cs" />
     <Compile Include="FilterLowPass.cs" />
     <Compile Include="s.cs" />
-    <Compile Include="Tests.cs" />
     <Compile Include="Wave.cs" />
     <Compile Include="Win32.cs" />
     <Compile Include="Windowing.cs" />

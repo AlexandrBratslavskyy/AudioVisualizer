@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AudioVisualizer
 {
     public class A
     {
+        public A() { }
+        public A(long N) {
+            for (long i = 0; i < N; ++i)
+            {
+                data.Add(new Complex(0, 0));
+            }
+        }
         public void Add(double real, double imaginary)
         {
             data.Add(new Complex(real, imaginary));
         }
-        public void setReal(int f, double r)
+        public void Set(long f, double real, double imaginary)
         {
-            data[f].setReal(r);
-        }
-        public void setImm(int f, double i)
-        {
-            data[f].setImm(i);
+            data[(int)f] = new Complex(real, imaginary);
         }
         public Complex Get(long f)
         {
@@ -45,22 +45,10 @@ namespace AudioVisualizer
             im = i;
         }
 
-        //Setter for real portion
-        public void setReal(double r)
-        {
-            re = r;
-        }
-
         //Getter for real portion
         public double getReal()
         {
             return re;
-        }
-
-        //Setter for imaginary portion
-        public void setImm(double i)
-        {
-            im = i;
         }
 
         //Getter for imaginary portion
@@ -71,7 +59,7 @@ namespace AudioVisualizer
         //Return amplitude using pythag sqrt(real*real + im*im)
         public double getAmp()
         {
-            return Math.Sqrt(Math.Pow(re, 2) + Math.Pow(im, 2));
+            return Math.Sqrt(re * re + im * im);
         }
     }
 }

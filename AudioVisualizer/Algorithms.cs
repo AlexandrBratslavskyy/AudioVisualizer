@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AudioVisualizer
@@ -11,33 +8,49 @@ namespace AudioVisualizer
         //statics
         static public A DFT(S s, long N)
         {
-            A a = new A();
+            Task[] Tasks = new Task[N];
+
+            A a = new A(N);
             for (long f = 0; f < N; ++f)
             {
-                // slow, needs threading
-                double real = 0, imm = 0;
-                for (long t = 0; t < N; ++t)
+                long i = f;
+                Tasks[f] = Task.Run(() =>
                 {
-                    real += s.Get(t) * Math.Cos(2 * Math.PI * t * f / N);
-                    imm -= s.Get(t) * Math.Sin(2 * Math.PI * t * f / N);
-                }
-                a.Add(real / N, imm / N);
+                    double real = 0, imm = 0;
+                    for (long t = 0; t < N; ++t)
+                    {
+                        real += s.Get(t) * Math.Cos(2 * Math.PI * t * i / N);
+                        imm -= s.Get(t) * Math.Sin(2 * Math.PI * t * i / N);
+                    }
+                    a.Set(i, real / N, imm / N);
+
+                });
             }
+            Task.WaitAll(Tasks);
             return a;
         }
+
         static public S ReverseDFT(A a)
         {
-            S s = new S();
             long N = a.Size();
+
+            Task[] Tasks = new Task[N];
+
+            S s = new S(N);
             for (long t = 0; t < N; t++)
             {
-                double samples = 0;
-                for (long f = 0; f < N; f++)
+                long i = t;
+                Tasks[t] = Task.Run(() =>
                 {
-                    samples += a.Get(f).getReal() * Math.Cos(2 * Math.PI * t * f / N) - a.Get(f).getImm() * Math.Sin(2 * Math.PI * t * f / N);
-                }
-                s.Add(samples / N);
+                    double samples = 0;
+                    for (long f = 0; f < N; f++)
+                    {
+                        samples += a.Get(f).getReal() * Math.Cos(2 * Math.PI * i * f / N) - a.Get(f).getImm() * Math.Sin(2 * Math.PI * i * f / N);
+                    }
+                    s.Set(i, samples / N);
+                });
             }
+            Task.WaitAll(Tasks);
             return s;
         }
     }

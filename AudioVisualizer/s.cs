@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AudioVisualizer
 {
     public class S
     {
         public S() { }
+        public S(long N)
+        {
+            for (long i = 0; i < N; ++i)
+            {
+                data.Add(0);
+            }
+        }
         public S(List<double> d)
         {
             for (long i = 0; i < d.Count; i++)

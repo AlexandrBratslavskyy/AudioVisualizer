@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace AudioVisualizer
@@ -25,16 +20,22 @@ namespace AudioVisualizer
         {
             S NEWs = new S(OGs);
             NEWs.Convolution(WEIGHTS.Size());
+            Task[] Tasks = new Task[OGs.Size()];
 
-            for (long i = 0; i < OGs.Size(); i++)
+            for (long t = 0; t < OGs.Size(); t++)
             {
-                double sum = 0;
-                for (long j = 0; j < WEIGHTS.Size(); j++)
+                long i = t;
+                Tasks[t] = Task.Run(() =>
                 {
-                    sum += WEIGHTS.Get(j) * NEWs.Get(i + j);
-                }
-                NEWs.Set(i, sum);
+                    double sum = 0;
+                    for (long j = 0; j < WEIGHTS.Size(); j++)
+                    {
+                        sum += WEIGHTS.Get(j) * NEWs.Get(i + j);
+                    }
+                    NEWs.Set(i, sum);
+                });
             }
+            Task.WaitAll(Tasks);
 
             NEWs.DeConvolution(WEIGHTS.Size());
 
