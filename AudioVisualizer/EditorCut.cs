@@ -8,12 +8,12 @@ namespace AudioVisualizer
 {
     public class EditorCut : Editor
     {
-        public override void Edit(S s, ScrollViewer scroll)
+        public override void Edit(ref S s, ref ScrollViewer scroll)
         {
             s.Cut((int)((Canvas.GetLeft(left) + scroll.HorizontalOffset) * Display.Get()), (int)((Canvas.GetLeft(right) + scroll.HorizontalOffset) * Display.Get()));
         }
 
-        public override void DrawEditor(Thumb left, Thumb right, Rectangle rect, Canvas canvas, Button btn)
+        public override void DrawEditor(ref Thumb left, ref Thumb right, ref Rectangle rect, ref Canvas canvas, ref Button btn)
         {
             this.left = left;
             this.right = right;
@@ -36,7 +36,7 @@ namespace AudioVisualizer
             btn.Content = "cut";
         }
 
-        public override void DragEditorLeft(DragDeltaEventArgs e)
+        public override void DragEditorLeft(ref DragDeltaEventArgs e)
         {
             double pos = Mouse.GetPosition(canvas).X;
 
@@ -56,7 +56,7 @@ namespace AudioVisualizer
             DrawRect();
         }
 
-        public override void DragEditorRight(DragDeltaEventArgs e)
+        public override void DragEditorRight(ref DragDeltaEventArgs e)
         {
             double width = canvas.ActualWidth, pos = Mouse.GetPosition(canvas).X;
 

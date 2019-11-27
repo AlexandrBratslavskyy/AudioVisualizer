@@ -24,7 +24,7 @@ namespace AudioVisualizer
         {
             return ZOOM;
         }
-        static public void DrawTimeDomain(Canvas canvas, S s)
+        static public void DrawTimeDomain(ref Canvas canvas, ref S s)
         {
             //clear previous
             canvas.Children.Clear();
@@ -34,15 +34,15 @@ namespace AudioVisualizer
 
             //display on canvas
             long i = 0;
-            for (long next = 0; next < s.Size() - ZOOM; i++)
+            for (long next = 0; next < s.Size() - ZOOM; )
             {
                 Line line = new Line();
                 double c1 = s.Get(next), c2 = s.Get(next += ZOOM);
 
                 line.X1 = i;
-                line.X2 = i;
-                line.Y1 = Y - c1 / max;
-                line.Y2 = Y - c2 / max;
+                line.X2 = ++i;
+                line.Y1 = Y - c1;
+                line.Y2 = Y - c2;
 
                 line.Stroke = new SolidColorBrush(Colors.Blue);
                 line.StrokeThickness = 1.0;
@@ -51,7 +51,7 @@ namespace AudioVisualizer
             }
             canvas.Width = i;
         }
-        static public void DrawFrequencyDomain(Canvas canvas, A a, long N)
+        static public void DrawFrequencyDomain(ref Canvas canvas, ref A a, ref long N)
         {
             //clear previous
             canvas.Children.Clear();
@@ -77,7 +77,7 @@ namespace AudioVisualizer
                 //display values
                 value.X1 = l + X / 2;
                 value.X2 = l + X / 2;
-                value.Y1 = Y - Math.Abs(a.Get(i++).getReal());
+                value.Y1 = Y - Math.Abs(a.GetReal(i++));
                 value.Y2 = Y;
 
                 value.Stroke = new SolidColorBrush(Colors.Red);

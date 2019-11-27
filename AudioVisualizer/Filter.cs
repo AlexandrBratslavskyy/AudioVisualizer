@@ -16,7 +16,7 @@ namespace AudioVisualizer
         protected abstract void CreateFilter();
         //Filtering using convolution to the time domain
         //Convolution algorithm to create new samples
-        public S Convolution(S OGs)
+        public S Convolution(ref S OGs)
         {
             S NEWs = new S(OGs);
             NEWs.Convolution(WEIGHTS.Size());
@@ -45,12 +45,12 @@ namespace AudioVisualizer
         protected Thumb left1, left2, right1, right2;
         protected Rectangle rect1, rect2;
         protected Canvas canvas;
-        public abstract void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, long N);
+        public abstract void DrawFilter(ref Thumb left1, ref Thumb left2, ref Thumb right1, ref Thumb right2, ref Rectangle rect1, ref Rectangle rect2, ref Canvas canvas, ref long N);
         protected abstract void DrawRect();
-        public abstract void DragFilterLeft1(DragDeltaEventArgs e);
-        public abstract void DragFilterLeft2(DragDeltaEventArgs e);
-        public abstract void DragFilterRight1(DragDeltaEventArgs e);
-        public abstract void DragFilterRight2(DragDeltaEventArgs e);
+        public abstract void DragFilterLeft1(ref DragDeltaEventArgs e);
+        public abstract void DragFilterLeft2(ref DragDeltaEventArgs e);
+        public abstract void DragFilterRight1(ref DragDeltaEventArgs e);
+        public abstract void DragFilterRight2(ref DragDeltaEventArgs e);
         public void DropFilterLeft1()
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;

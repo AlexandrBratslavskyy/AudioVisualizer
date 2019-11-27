@@ -20,9 +20,17 @@ namespace AudioVisualizer
         {
             data[(int)f] = new Complex(real, imaginary);
         }
-        public Complex Get(long f)
+        public double GetReal(long f)
         {
-            return data[(int)f];
+            return data[(int)f].getReal();
+        }
+        public double GetImm(long f)
+        {
+            return data[(int)f].getImm();
+        }
+        public double GetAmp(long f)
+        {
+            return data[(int)f].getAmp();
         }
         public int Size()
         {
@@ -32,7 +40,7 @@ namespace AudioVisualizer
     }
     //class for Complex numbers
     //has a real and imaginary portion
-    public struct Complex
+    struct Complex
     {
         //declarations of private members
         private double re;

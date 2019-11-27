@@ -5,11 +5,11 @@ namespace AudioVisualizer
 {
     class Win32
     {
-        static public void StartRecord(int bitsPerSample, int sampleRate)
+        static public void StartRecord(ref int bitsPerSample, ref int sampleRate)
         {
             StartRec(bitsPerSample, sampleRate);
         }
-        static public Wave StopRecord(int bitsPerSample, int sampleRate)
+        static public Wave StopRecord(ref int bitsPerSample, ref int sampleRate)
         {
             RecordData rd = StopRec();
             byte[] data = new byte[rd.len];
@@ -18,7 +18,7 @@ namespace AudioVisualizer
             return new Wave(data, Convert.ToUInt16(bitsPerSample), Convert.ToUInt16(sampleRate));
         }
 
-        static public void StartPlay(Wave wave, S s)
+        static public void StartPlay(ref Wave wave, ref S s)
         {
             Wave w = new Wave(wave, s);
 
@@ -35,16 +35,16 @@ namespace AudioVisualizer
 
         [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool OpenDialog();
-        [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool CloseDialog();
+        //[DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        //public static extern bool CloseDialog();
         [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern RecordData StopRec();
         [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool StartRec(int d, int r);
-        [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr GetWaveform();
-        [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool PlayPause();
+        //[DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        //public static extern IntPtr GetWaveform();
+        //[DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        //public static extern bool PlayPause();
         [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool PlayStart(IntPtr p, int size, int d, int r);
         [DllImport("Record1.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]

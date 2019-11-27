@@ -50,7 +50,7 @@ namespace AudioVisualizer
         }
 
         // drawing and dragging
-        public override void DrawFilter(Thumb left1, Thumb left2, Thumb right1, Thumb right2, Rectangle rect1, Rectangle rect2, Canvas canvas, long N)
+        public override void DrawFilter(ref Thumb left1, ref Thumb left2, ref Thumb right1, ref Thumb right2, ref Rectangle rect1, ref Rectangle rect2, ref Canvas canvas, ref long N)
         {
             this.N = N;
             this.left1 = left1;
@@ -93,7 +93,7 @@ namespace AudioVisualizer
             Canvas.SetLeft(rect1, Canvas.GetLeft(left1));
             Canvas.SetLeft(rect2, Canvas.GetLeft(right2));
         }
-        public override void DragFilterLeft1(DragDeltaEventArgs e)
+        public override void DragFilterLeft1(ref DragDeltaEventArgs e)
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
@@ -121,7 +121,7 @@ namespace AudioVisualizer
 
             DrawRect();
         }
-        public override void DragFilterLeft2(DragDeltaEventArgs e)
+        public override void DragFilterLeft2(ref DragDeltaEventArgs e)
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
@@ -148,7 +148,7 @@ namespace AudioVisualizer
 
             DrawRect();
         }
-        public override void DragFilterRight1(DragDeltaEventArgs e)
+        public override void DragFilterRight1(ref DragDeltaEventArgs e)
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 
@@ -170,7 +170,7 @@ namespace AudioVisualizer
 
             DrawRect();
         }
-        public override void DragFilterRight2(DragDeltaEventArgs e)
+        public override void DragFilterRight2(ref DragDeltaEventArgs e)
         {
             double width = canvas.ActualWidth, bin = width / N, pos = Mouse.GetPosition(canvas).X;
 

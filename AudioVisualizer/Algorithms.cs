@@ -45,7 +45,7 @@ namespace AudioVisualizer
                     double samples = 0;
                     for (long f = 0; f < N; f++)
                     {
-                        samples += a.Get(f).getReal() * Math.Cos(2 * Math.PI * i * f / N) - a.Get(f).getImm() * Math.Sin(2 * Math.PI * i * f / N);
+                        samples += a.GetReal(f) * Math.Cos(2 * Math.PI * i * f / N) - a.GetImm(f) * Math.Sin(2 * Math.PI * i * f / N);
                     }
                     s.Set(i, samples / N);
                 });

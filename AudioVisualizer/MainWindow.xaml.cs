@@ -33,22 +33,11 @@ namespace AudioVisualizer
         }
 
         //New signal added
-        void CreateSignal()
+        void CreateSignal(bool b)
         {
-            //save original
-            ORIGINAL = new S(WAVE);
-            //enable all
-            btnsave.IsEnabled = true;
-            btnplay.IsEnabled = true;
-            btncut.IsEnabled = true;
-            btncopy.IsEnabled = true;
-
-            CreateDivergentPaths();
-        }
-        void CreateSignal(S s)
-        {
-            //save original
-            ORIGINAL = s;
+            if(b)
+                //save original
+                ORIGINAL = new S(WAVE);
             //enable all
             btnsave.IsEnabled = true;
             btnplay.IsEnabled = true;
@@ -78,7 +67,7 @@ namespace AudioVisualizer
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
             {
                 //draw filter
-                FILTER.DrawFilter(left1, left2, right1, right2, rect1, rect2, FilterCanvas, N);
+                FILTER.DrawFilter(ref left1, ref left2, ref right1, ref right2, ref rect1, ref rect2, ref FilterCanvas, ref N);
                 //convolution
                 CreateFilterRange();
             });
@@ -86,25 +75,25 @@ namespace AudioVisualizer
         void CreateFilterRange()
         {
             //convolution
-            FILTERED = FILTER.Convolution(ORIGINAL);
+            FILTERED = FILTER.Convolution(ref ORIGINAL);
             //windowing
             CreateWindow();
         }
         void CreateWindow()
         {
             //windowing
-            WINDOWED = WINDOW.CreateWindow(FILTERED, N);
+            WINDOWED = WINDOW.CreateWindow(ref FILTERED, ref N);
             //display time domain
             DisplayTimeDomain();
         }
         void DisplayTimeDomain()
         {
-            Display.DrawTimeDomain(TimeDomain, WINDOWED);
+            Display.DrawTimeDomain(ref TimeDomain, ref WINDOWED);
         }
         void DisplayFrequencyDomain()
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () {
-                Display.DrawFrequencyDomain(FrequencyDomain, COMPLEX, N);
+                Display.DrawFrequencyDomain(ref FrequencyDomain, ref COMPLEX, ref N);
             });
         }
 
@@ -120,7 +109,7 @@ namespace AudioVisualizer
             {
                 WAVE = new Wave();
                 WAVE.Read(File.Open(openFileDialog.FileName, FileMode.Open));
-                CreateSignal();
+                CreateSignal(true);
             }
             //MessageBox.Show("Can't open wav files", "TODO");
         }
@@ -140,7 +129,7 @@ namespace AudioVisualizer
         //record
         void startrecord(object sender, RoutedEventArgs e)
         {
-            Win32.StartRecord(quantizationLevel, sampleRate);
+            Win32.StartRecord(ref quantizationLevel, ref sampleRate);
             btnstartrecord.IsEnabled = false;
             btnstoprecord.IsEnabled = true;
             btnplay.IsEnabled = false;
@@ -149,12 +138,12 @@ namespace AudioVisualizer
         {
             btnstartrecord.IsEnabled = true;
             btnstoprecord.IsEnabled = false;
-            WAVE = Win32.StopRecord(quantizationLevel, sampleRate);
-            CreateSignal();
+            WAVE = Win32.StopRecord(ref quantizationLevel, ref sampleRate);
+            CreateSignal(true);
         }
         void play(object sender, RoutedEventArgs e)
         {
-            Win32.StartPlay(WAVE, WINDOWED);
+            Win32.StartPlay(ref WAVE, ref WINDOWED);
             btnplay.IsEnabled = false;
             btnstopplay.IsEnabled = true;
         }
@@ -227,21 +216,21 @@ namespace AudioVisualizer
             FILTER = new FilterLowPass();
             if (ORIGINAL == null)
                 return;
-            CreateFilter();
+            Task.Run(CreateFilter);
         }
         void high(object sender, RoutedEventArgs e)
         {
             FILTER = new FilterHighPass();
             if (ORIGINAL == null)
                 return;
-            CreateFilter();
+            Task.Run(CreateFilter);
         }
         void band(object sender, RoutedEventArgs e)
         {
             FILTER = new FilterBandPass();
             if (ORIGINAL == null)
                 return;
-            CreateFilter();
+            Task.Run(CreateFilter);
         }
 
         //editing
@@ -253,7 +242,7 @@ namespace AudioVisualizer
             if (!ect)
             {
                 EDITOR = new EditorCut();
-                EDITOR.DrawEditor(left, right, rect, EditCanvas, Edit);
+                EDITOR.DrawEditor(ref left, ref right, ref rect, ref EditCanvas, ref Edit);
 
                 ect = true;
                 ecp = false;
@@ -273,7 +262,7 @@ namespace AudioVisualizer
             if (!ecp)
             {
                 EDITOR = new EditorCopy();
-                EDITOR.DrawEditor(left, right, rect, EditCanvas, Edit);
+                EDITOR.DrawEditor(ref left, ref right, ref rect, ref EditCanvas, ref Edit);
 
                 ect = false;
                 ecp = true;
@@ -292,7 +281,7 @@ namespace AudioVisualizer
             if (!ept)
             {
                 EDITOR = new EditorPaste();
-                EDITOR.DrawEditor(left, right, rect, EditCanvas, Edit);
+                EDITOR.DrawEditor(ref left, ref right, ref rect, ref EditCanvas, ref Edit);
 
                 ect = false;
                 ecp = false;
@@ -327,19 +316,19 @@ namespace AudioVisualizer
         //drag
         public void dragfilterleft1(object sender, DragDeltaEventArgs e)
         {
-            FILTER.DragFilterLeft1(e);
+            FILTER.DragFilterLeft1(ref e);
         }
         public void dragfilterleft2(object sender, DragDeltaEventArgs e)
         {
-            FILTER.DragFilterLeft2(e);
+            FILTER.DragFilterLeft2(ref e);
         }
         public void dragfilterright1(object sender, DragDeltaEventArgs e)
         {
-            FILTER.DragFilterRight1(e);
+            FILTER.DragFilterRight1(ref e);
         }
         public void dragfilterright2(object sender, DragDeltaEventArgs e)
         {
-            FILTER.DragFilterRight2(e);
+            FILTER.DragFilterRight2(ref e);
         }
         //drop
         public void dropfilterleft1(object sender, DragCompletedEventArgs e)
@@ -365,17 +354,17 @@ namespace AudioVisualizer
         //more drag
         public void drageditorleft(object sender, DragDeltaEventArgs e)
         {
-            EDITOR.DragEditorLeft(e);
+            EDITOR.DragEditorLeft(ref e);
         }
         public void drageditorright(object sender, DragDeltaEventArgs e)
         {
-            EDITOR.DragEditorRight(e);
+            EDITOR.DragEditorRight(ref e);
         }
         void edit(object sender, RoutedEventArgs e)
         {
-            EDITOR.Edit(ORIGINAL, scroll);
+            EDITOR.Edit(ref ORIGINAL, ref scroll);
             btnpaste.IsEnabled = Editor.isCP();
-            CreateSignal(ORIGINAL);
+            CreateSignal(false);
         }
     }
 }
