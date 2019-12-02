@@ -97,6 +97,8 @@
                         <RowDefinition Height="110" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="30" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Windowing</TextBlock>
@@ -134,10 +136,26 @@
 
                         </Grid>
                     </Border>
-
-                    <TextBlock Grid.Row="6" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Zoom</TextBlock>
+                    
+                    <TextBlock Grid.Row="6" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">N</TextBlock>
 
                     <Border Grid.Row="7" Padding="1" Margin="10,1,10,1" BorderBrush="Black" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Margin="10,1,2,1" Click="ndown">-</Button>
+
+                            <Button Grid.Column="1" Margin="2,1,10,1" Click="nup">+</Button>
+
+                        </Grid>
+                    </Border>
+                    
+                    <TextBlock Grid.Row="8" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Zoom</TextBlock>
+
+                    <Border Grid.Row="9" Padding="1" Margin="10,1,10,1" BorderBrush="Black" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

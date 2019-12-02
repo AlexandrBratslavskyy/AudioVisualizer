@@ -29,8 +29,8 @@ namespace AudioVisualizer
             //clear previous
             canvas.Children.Clear();
 
-            //over scrollbar                        //compensate for limited space, only shows positives
-            double Y = canvas.ActualHeight * 0.945, max = (Math.Abs(s.GetMax()) + Math.Abs(s.GetMin())) / Y;
+            //over scrollbar
+            double Y = canvas.ActualHeight * 3 / 4;
 
             //display on canvas
             long i = 0;
@@ -61,7 +61,7 @@ namespace AudioVisualizer
 
             //display filters
             long i = 0;
-            for (double l = 0; l < canvas.ActualWidth; l+=X)
+            for (double l = 0; l < canvas.ActualWidth && i < a.Size(); l+=X)
             {
                 //display lines on canvas
                 Line line = new Line(), value = new Line();

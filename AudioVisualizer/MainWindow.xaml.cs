@@ -296,6 +296,28 @@ namespace AudioVisualizer
             }
         }
 
+        //N
+        void ndown(object sender, RoutedEventArgs e)
+        {
+            if (ORIGINAL == null)
+                return;
+            if (N > 2)
+            {
+                N -= 2;
+                CreateDivergentPaths();
+            }
+        }
+        void nup(object sender, RoutedEventArgs e)
+        {
+            if (ORIGINAL == null)
+                return;
+            if (N + 2 <= ORIGINAL.Size())
+            {
+                N += 2;
+                CreateDivergentPaths();
+            }
+        }
+
         //zooming
         void zoomout(object sender, RoutedEventArgs e)
         {

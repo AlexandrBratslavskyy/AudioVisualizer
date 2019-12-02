@@ -31,10 +31,6 @@ namespace AudioVisualizer
         public void Add(double val)
         {
             data.Add(val);
-            if (val > max)
-                max = val;
-            else if (val < min)
-                min = val;
         }
         public void Convolution(long c)
         {
@@ -53,14 +49,6 @@ namespace AudioVisualizer
         public double Get(long t)
         {
             return data[(int)t];
-        }
-        public double GetMax()
-        {
-            return max;
-        }
-        public double GetMin()
-        {
-            return min;
         }
         public long Size()
         {
@@ -87,7 +75,5 @@ namespace AudioVisualizer
                 data.Insert(paste + i, s.Get(i));
         }
         private List<double> data = new List<double>();
-        private double max = 0;
-        private double min = 0;
     }
 }
