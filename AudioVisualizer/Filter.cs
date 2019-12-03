@@ -20,22 +20,16 @@ namespace AudioVisualizer
         {
             S NEWs = new S(OGs);
             NEWs.Convolution(WEIGHTS.Size());
-            Task[] Tasks = new Task[OGs.Size()];
 
             for (long t = 0; t < OGs.Size(); t++)
             {
-                long i = t;
-                Tasks[t] = Task.Run(() =>
+                double sum = 0;
+                for (long j = 0; j < WEIGHTS.Size(); j++)
                 {
-                    double sum = 0;
-                    for (long j = 0; j < WEIGHTS.Size(); j++)
-                    {
-                        sum += WEIGHTS.Get(j) * NEWs.Get(i + j);
-                    }
-                    NEWs.Set(i, sum);
-                });
+                    sum += WEIGHTS.Get(j) * NEWs.Get(t + j);
+                }
+                NEWs.Set(t, sum);
             }
-            Task.WaitAll(Tasks);
 
             NEWs.DeConvolution(WEIGHTS.Size());
 

@@ -11,7 +11,7 @@ namespace AudioVisualizer
 {
     public partial class MainWindow : Window
     {
-        static long N = 12;
+        static long N = 100;
         A COMPLEX;
 
         S ORIGINAL, FILTERED, WINDOWED;

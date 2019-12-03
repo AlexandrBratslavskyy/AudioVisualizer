@@ -137,7 +137,7 @@
                         </Grid>
                     </Border>
                     
-                    <TextBlock Grid.Row="6" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">N</TextBlock>
+                    <TextBlock Grid.Row="6" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Bottom">Filter Size</TextBlock>
 
                     <Border Grid.Row="7" Padding="1" Margin="10,1,10,1" BorderBrush="Black" BorderThickness="1">
                         <Grid>

@@ -30,7 +30,7 @@ namespace AudioVisualizer
             canvas.Children.Clear();
 
             //over scrollbar
-            double Y = canvas.ActualHeight * 3 / 4;
+            double Y = canvas.ActualHeight / 2;
 
             //display on canvas
             long i = 0;
@@ -41,8 +41,8 @@ namespace AudioVisualizer
 
                 line.X1 = i;
                 line.X2 = ++i;
-                line.Y1 = Y - c1;
-                line.Y2 = Y - c2;
+                line.Y1 = Y - c1 / 150;
+                line.Y2 = Y - c2 / 150;
 
                 line.Stroke = new SolidColorBrush(Colors.Blue);
                 line.StrokeThickness = 1.0;
@@ -64,27 +64,18 @@ namespace AudioVisualizer
             for (double l = 0; l < canvas.ActualWidth && i < a.Size(); l+=X)
             {
                 //display lines on canvas
-                Line line = new Line(), value = new Line();
-
-                line.X1 = l;
-                line.X2 = l;
-                line.Y1 = 0;
-                line.Y2 = Y;
-
-                line.Stroke = new SolidColorBrush(Colors.Black);
-                line.StrokeThickness = 1.0;
+                Line line = new Line();
 
                 //display values
-                value.X1 = l + X / 2;
-                value.X2 = l + X / 2;
-                value.Y1 = Y - Math.Abs(a.GetReal(i++));
-                value.Y2 = Y;
+                line.X1 = l + X / 2;
+                line.X2 = l + X / 2;
+                line.Y1 = Y - Math.Abs(a.GetAmp(i++)) / 25;
+                line.Y2 = Y;
 
-                value.Stroke = new SolidColorBrush(Colors.Red);
-                value.StrokeThickness = X;
+                line.Stroke = new SolidColorBrush(Colors.Red);
+                line.StrokeThickness = X;
 
                 // add both - order matters I think
-                canvas.Children.Add(value);
                 canvas.Children.Add(line);
             }
         }

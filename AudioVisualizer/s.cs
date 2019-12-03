@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AudioVisualizer
 {
@@ -19,8 +21,29 @@ namespace AudioVisualizer
         }
         public S(Wave wav)
         {
-            for (long i = 0; i < wav.data.Length; i++)
-                data.Add(wav.data[i]);
+            double[] samples;
+            switch (wav.bitsPerSample)
+            {
+                case 16:
+                    short[] stemp = new short[(int)(wav.dataSize / wav.fmtBlockAlign)];
+
+                    for (int i = 0, j = 0; i < wav.dataSize - 4; i += (int)wav.fmtBlockAlign, j++)
+                        stemp[j] = BitConverter.ToInt16(wav.data, i);
+
+                    samples = stemp.Select(x => (double)(x)).ToArray();
+                    data.AddRange(samples);
+                    
+                    break;
+                 case 32:
+                    int[] itemp = new int[(int)(wav.dataSize / wav.fmtBlockAlign)];
+
+                    for (int i = 0, j = 0; i < wav.dataSize - 4; i += (int)wav.fmtBlockAlign, j++)
+                        itemp[j] = BitConverter.ToInt32(wav.data, i);
+
+                    samples = itemp.Select(x => (double)(x)).ToArray();
+                    data.AddRange(samples);
+                    break;
+                 }
         }
         // Copy constructor.
         public S(S s)
